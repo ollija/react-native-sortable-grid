@@ -188,7 +188,7 @@ class DraggableGrid extends Component {
 
     return (
       <View
-        style   = { styles.draggableGrid }
+        style   = { [styles.draggableGrid, this.props.style] }
         onLayout= { this.assessGridSize }
       >
         { gridLayout &&
