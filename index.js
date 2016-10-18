@@ -37,6 +37,7 @@ class DraggableGrid extends Component {
     this.blockTransitionDuration      = BLOCK_TRANSITION_DURATION
     this.activeBlockCenteringDuration = ACTIVE_BLOCK_CENTERING_DURATION
     this.onDragRelease                = () => {}
+    this.onDragStart                  = () => {}
 
     this.itemOrder         = null
     this.dragPosition      = null
