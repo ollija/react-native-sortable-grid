@@ -212,7 +212,8 @@ class DraggableGrid extends Component {
                   left: this.state.blockPositions[key].currentPosition.getLayout().left
                 },
 
-                this.state.activeBlock == key && startDragWiggle
+                this.state.activeBlock == key && startDragWiggle,
+                this.state.activeBlock == key && { zIndex: 1 }
 
                 ]}
               onLayout = {this.saveBlockPositions(key)}
