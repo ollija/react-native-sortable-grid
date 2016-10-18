@@ -51,21 +51,25 @@ class DraggableGrid extends Component {
     }
   }
 
-  componentWillMount = () => {
-    this.createTouchHandlers()
-    this.itemOrder = _.map(this.props.children, ({key, ref}, index) => { return { key, ref, order: index } })
-
-    if (this.props.blockTransitionDuration)
-      this.blockTransitionDuration = this.props.blockTransitionDuration
-
-    if (this.props.activeBlockCenteringDuration)
-      this.activeBlockCenteringDuration = this.props.activeBlockCenteringDuration
-
-    if (this.props.onDragRelease)
-      this.onDragRelease = this.props.onDragRelease
-  }
+  componentWillMount = () => this.createTouchHandlers()
 
   componentDidMount = () => {}
+
+  componentWillReceiveProps = (properties) => {
+    this.itemOrder = _.map(properties.children, ({key, ref}, index) => { return { key, ref, order: index } })
+
+    if (properties.blockTransitionDuration)
+      this.blockTransitionDuration = properties.blockTransitionDuration
+
+    if (properties.activeBlockCenteringDuration)
+      this.activeBlockCenteringDuration = properties.activeBlockCenteringDuration
+
+    if (properties.onDragStart)
+      this.onDragStart = properties.onDragStart
+
+    if (properties.onDragRelease)
+      this.onDragRelease = properties.onDragRelease
+  }
 
   onStartDrag = (evt, gestureState) => {
     if (this.state.activeBlock != null) {
