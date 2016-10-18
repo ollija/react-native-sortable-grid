@@ -164,6 +164,7 @@ class DraggableGrid extends Component {
   }
 
   activateDrag = (key) => () => {
+    this.onDragStart()
     this.setState({activeBlock: key})
     this.state.startDragWiggle.setValue(20)
     Animated.spring(this.state.startDragWiggle, {
