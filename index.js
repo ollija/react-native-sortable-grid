@@ -83,7 +83,7 @@ class DraggableGrid extends Component {
   }
 
   onMoveBlock = (evt, {moveX, moveY}) => {
-    if (this.state.activeBlock) {
+    if (this.state.activeBlock != null) {
       let dragPosition = { x: moveX, y: moveY }
       this.dragPosition = dragPosition
       let originalPosition = this.state.blockPositions[ this.state.activeBlock ].origin
@@ -124,7 +124,7 @@ class DraggableGrid extends Component {
   }
 
   onReleaseBlock = (evt, gestureState) => {
-    if (this.state.activeBlock) {
+    if (this.state.activeBlock != null) {
       this.state.blockPositions[this.state.activeBlock].currentPosition.flattenOffset()
       Animated.timing(
         this.state.blockPositions[this.state.activeBlock].currentPosition,
