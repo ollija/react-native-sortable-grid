@@ -25,7 +25,7 @@ class DraggableGrid extends Component {
       onMoveShouldSetPanResponder:         (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
       onShouldBlockNativeResponder:        (evt, gestureState) => false,
-      onPanResponderTerminationRequest:    (evt, gestureState) => true,
+      onPanResponderTerminationRequest:    (evt, gestureState) => false,
       onPanResponderGrant:   this.onStartDrag,
       onPanResponderMove:    this.onMoveBlock,
       onPanResponderRelease: this.onReleaseBlock
