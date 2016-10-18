@@ -131,7 +131,7 @@ class DraggableGrid extends Component {
         { toValue: this.state.blockPositions[this.state.activeBlock].origin, duration: this.activeBlockCenteringDuration }
       ).start()
       this.setState({activeBlock: null})
-      let itemOrder = _.orderBy(this.itemOrder, item=>item.order)
+      let itemOrder = _.sortBy(this.itemOrder, item=>item.order)
       this.onDragRelease( {itemOrder} )
     }
   }
