@@ -217,8 +217,7 @@ class DraggableGrid extends Component {
                   height: blockWidth },
 
                 blockPositionsSet &&
-                { flexWrap: 'nowrap',
-                  position: 'absolute',
+                { position: 'absolute',
                   top: this.state.blockPositions[key].currentPosition.getLayout().top,
                   left: this.state.blockPositions[key].currentPosition.getLayout().left
                 },
