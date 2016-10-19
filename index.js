@@ -84,7 +84,13 @@ class DraggableGrid extends Component {
 
   onMoveBlock = (evt, {moveX, moveY}) => {
     if (this.state.activeBlock != null) {
-      let dragPosition = { x: moveX, y: moveY }
+
+      let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridLayout.height - this.blockWidth))
+      let xChokeAmount = Math.max(0, (this.activeBlockOffset.x + moveX) - (this.state.gridLayout.width - this.blockWidth))
+      let yMinChokeAmount = Math.min(0, this.activeBlockOffset.y + moveY)
+      let xMinChokeAmount = Math.min(0, this.activeBlockOffset.x + moveX)
+
+      let dragPosition = { x: moveX - xChokeAmount - xMinChokeAmount, y: moveY - yChokeAmount - yMinChokeAmount }
       this.dragPosition = dragPosition
       let originalPosition = this.state.blockPositions[ this.state.activeBlock ].origin
       let distanceToOrigin = this._getDistanceTo(originalPosition)
