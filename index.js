@@ -193,11 +193,11 @@ class DraggableGrid extends Component {
     }
 
     let startDragWiggle = {transform: [{
-     rotate: this.state.startDragWiggle.interpolate({
-       inputRange: [0, 360],
-       outputRange: ['0 deg', '360 deg']
-     })
-   }]}
+      rotate: this.state.startDragWiggle.interpolate({
+        inputRange: [0, 360],
+        outputRange: ['0 deg', '360 deg']
+      })
+    }]}
 
     return (
       <View
@@ -226,7 +226,7 @@ class DraggableGrid extends Component {
                 this.state.activeBlock == key && { zIndex: 1 }
 
                 ]}
-              onLayout = {this.saveBlockPositions(key)}
+              onLayout = { this.saveBlockPositions(key) }
               {...this._panResponder.panHandlers}
             >
               <TouchableWithoutFeedback
