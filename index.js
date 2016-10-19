@@ -149,9 +149,8 @@ class DraggableGrid extends Component {
   }
 
   assessGridSize = ({nativeEvent}) => {
-    if (!this.state.gridLayout) {
-      this.setState({gridLayout: nativeEvent.layout})
-    }
+    this.setState({gridLayout: nativeEvent.layout})
+    this.blockWidth = nativeEvent.layout.width / this.props.itemsPerRow
   }
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
