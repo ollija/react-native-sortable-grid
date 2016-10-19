@@ -186,8 +186,10 @@ class DraggableGrid extends Component {
     let gridLayout = this.state.gridLayout
     let blockWidth = null
     let blockPositionsSet = this.state.blockPositions.length == this.props.children.length
+    let rows = 1
     if (gridLayout) {
       blockWidth = gridLayout.width / itemsPerRow
+      rows = Math.floor(this.props.children.length / itemsPerRow) + 1
     }
 
     let startDragWiggle = {transform: [{
@@ -199,7 +201,11 @@ class DraggableGrid extends Component {
 
     return (
       <View
-        style   = { [styles.draggableGrid, this.props.style] }
+        style = {[
+          styles.draggableGrid,
+          this.props.style,
+          { height: blockWidth * rows }
+        ]}
         onLayout= { this.assessGridSize }
       >
         { gridLayout &&
