@@ -207,7 +207,8 @@ class DraggableGrid extends Component {
               key = {key}
               style = {[
                 { width: blockWidth,
-                  height: blockWidth },
+                  height: blockWidth,
+                  justifyContent: 'center' },
 
                 blockPositionsSet &&
                 { position: 'absolute',
