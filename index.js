@@ -22,18 +22,23 @@ class DraggableGrid extends Component {
 
     this.blockTransitionDuration      = BLOCK_TRANSITION_DURATION
     this.activeBlockCenteringDuration = ACTIVE_BLOCK_CENTERING_DURATION
+    this.itemsPerRow                  = ITEMS_PER_ROW
+    this.dragActivationTreshold       = DRAG_ACTIVATION_TRESHOLD
     this.onDragRelease                = () => {}
     this.onDragStart                  = () => {}
 
     this.itemOrder         = null
     this.dragPosition      = null
     this.activeBlockOffset = null
+    this.rows              = null
+    this.ghostBlocks       = []
 
     this.state = {
       gridLayout: null,
       blockPositions: [],
       startDragWiggle: new Animated.Value(0),
-      activeBlock: null
+      activeBlock: null,
+      blockWidth: null
     }
   }
 
@@ -87,6 +92,14 @@ class DraggableGrid extends Component {
         }
       })
 
+      this.ghostBlocks.forEach( ghostBlockPosition => {
+        let distance = this._getDistanceTo(ghostBlockPosition)
+        if (distance < closestDistance) {
+          closest = this.state.activeBlock
+          closestDistance = distance
+        }
+      })
+
       if (closest !== this.state.activeBlock) {
         Animated.timing(
           this.state.blockPositions[closest].currentPosition,
@@ -137,6 +150,23 @@ class DraggableGrid extends Component {
         origin          : thisPosition
       }
       this.setState({ blockPositions })
+
+      if (blockPositions.length == this.props.children.length) {
+        this.setGhostPositions()
+      }
+    }
+  }
+
+  setGhostPositions = () => {
+    let blockWidth = this.state.blockWidth
+    let fullGridItemCount = this.rows * this.itemsPerRow
+    let ghostBlockCount = fullGridItemCount - this.props.children.length
+    let y = blockWidth * (this.rows - 1)
+    let initialX =  blockWidth * (this.itemsPerRow - ghostBlockCount)
+
+    for (let i = 0; i < ghostBlockCount; ++i) {
+      let x = initialX + blockWidth * i
+      this.ghostBlocks.push({x, y})
     }
   }
 
