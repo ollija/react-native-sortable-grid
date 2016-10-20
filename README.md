@@ -34,7 +34,7 @@ import SortableGrid from 'react-native-sortable-grid'
 
 ```
 
-## GridView properties
+## SortableGrid properties
 
  -  ``` blockTransitionDuration ``` **Number**
 
@@ -62,7 +62,7 @@ import SortableGrid from 'react-native-sortable-grid'
 
 
 
-## GridView's children's properties
+## SortableGrid's children's properties
 
  -  ``` onTap ``` **Callback**
 
