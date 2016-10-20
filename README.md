@@ -1,7 +1,7 @@
 
-<p align="center">
+<h3 align="center" style="margin-bottom: 20px;">
   Drag-and-drop -style rearrangable grid view
-</p>
+</h3>
 
 <p align="center">
   <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
@@ -11,7 +11,7 @@
 
 ## Installation
 
-``` npm i ollija/react-native-sortable-grid -s ```
+``` npm i ollija/react-native-sortable-grid --save ```
 
 ## Usage
 
