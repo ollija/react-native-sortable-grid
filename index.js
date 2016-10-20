@@ -134,8 +134,11 @@ class DraggableGrid extends Component {
   }
 
   assessGridSize = ({nativeEvent}) => {
-    this.setState({gridLayout: nativeEvent.layout})
     this.blockWidth = nativeEvent.layout.width / this.props.itemsPerRow
+    this.setState({
+      gridLayout: nativeEvent.layout,
+      blockWidth: this.blockWidth
+    })
   }
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
@@ -183,30 +186,16 @@ class DraggableGrid extends Component {
   }
 
   render = () => {
-    let itemsPerRow = this.props.itemsPerRow || ITEMS_PER_ROW
-    let dragActivationTreshold = this.props.dragActivationTreshold || DRAG_ACTIVATION_TRESHOLD
     let gridLayout = this.state.gridLayout
-    let blockWidth = null
+    let blockWidth = this.state.blockWidth
     let blockPositionsSet = this.state.blockPositions.length == this.props.children.length
-    let rows = 1
-    if (gridLayout) {
-      blockWidth = gridLayout.width / itemsPerRow
-      rows = Math.floor(this.props.children.length / itemsPerRow) + 1
-    }
-
-    let startDragWiggle = {transform: [{
-      rotate: this.state.startDragWiggle.interpolate({
-        inputRange: [0, 360],
-        outputRange: ['0 deg', '360 deg']
-      })
-    }]}
 
     return (
       <View
         style = {[
           styles.draggableGrid,
           this.props.style,
-          { height: blockWidth * rows }
+          { height: blockWidth * this.rows }
         ]}
         onLayout= { this.assessGridSize }
       >
@@ -232,8 +221,8 @@ class DraggableGrid extends Component {
               {...this._panResponder.panHandlers}
             >
               <TouchableWithoutFeedback
-                style        = {{ flex: 1 }}
-                delayPressIn = { dragActivationTreshold }
+                style        = {{ flex: 1, zIndex: key }}
+                delayPressIn = { this.dragActivationTreshold }
                 onPressIn    = { this.activateDrag(key) }>
 
                 { item }
