@@ -224,7 +224,7 @@ class DraggableGrid extends Component {
               {...this._panResponder.panHandlers}
             >
               <TouchableWithoutFeedback
-                style        = {{ flex: 1, zIndex: key }}
+                style        = {{ flex: 1 }}
                 delayPressIn = { this.dragActivationTreshold }
                 onPressIn    = { this.activateDrag(key) }>
 
