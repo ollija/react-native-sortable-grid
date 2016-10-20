@@ -11,7 +11,7 @@
 
 ## Installation
 
-``` npm i ollija/react-native-sortable-grid --save ```
+``` npm i react-native-sortable-grid --save ```
 
 ## Usage
 
