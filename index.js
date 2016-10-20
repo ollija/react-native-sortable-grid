@@ -44,9 +44,11 @@ class DraggableGrid extends Component {
 
   componentWillMount = () => this.createTouchHandlers()
 
-  componentDidMount = () => {}
+  componentDidMount = () => this.handleNewProps(this.props)
 
-  componentWillReceiveProps = (properties) => {
+  componentWillReceiveProps = (properties) => this.handleNewProps(properties)
+
+  handleNewProps = (properties) => {
     this._assignReceivedPropertiesIntoThis(properties)
     this.itemOrder = _.map(properties.children, ({key, ref}, index) => {
       return { key, ref, order: index }
