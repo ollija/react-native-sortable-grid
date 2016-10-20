@@ -5,7 +5,7 @@
     "sortable",
     "grid"
   ],
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Drag-and-drop sortable grid view for React Native.",
   "main": "index.js",
   "scripts": {},
@@ -13,8 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/leecade/react-native-swiper.git"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "lodash": "^4.16.4"
   }
