@@ -17,20 +17,6 @@ const ACTIVE_BLOCK_CENTERING_DURATION = 200 // Milliseconds
 
 class DraggableGrid extends Component {
 
-  createTouchHandlers = () =>
-    this._panResponder = PanResponder.create({
-      onPanResponderTerminate:             (evt, gestureState) => {},
-      onStartShouldSetPanResponder:        (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onMoveShouldSetPanResponder:         (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
-      onShouldBlockNativeResponder:        (evt, gestureState) => false,
-      onPanResponderTerminationRequest:    (evt, gestureState) => false,
-      onPanResponderGrant:   this.onStartDrag,
-      onPanResponderMove:    this.onMoveBlock,
-      onPanResponderRelease: this.onReleaseBlock
-    })
-
   constructor() {
     super()
 
@@ -56,19 +42,11 @@ class DraggableGrid extends Component {
   componentDidMount = () => {}
 
   componentWillReceiveProps = (properties) => {
-    this.itemOrder = _.map(properties.children, ({key, ref}, index) => { return { key, ref, order: index } })
-
-    if (properties.blockTransitionDuration)
-      this.blockTransitionDuration = properties.blockTransitionDuration
-
-    if (properties.activeBlockCenteringDuration)
-      this.activeBlockCenteringDuration = properties.activeBlockCenteringDuration
-
-    if (properties.onDragStart)
-      this.onDragStart = properties.onDragStart
-
-    if (properties.onDragRelease)
-      this.onDragRelease = properties.onDragRelease
+    this._assignReceivedPropertiesIntoThis(properties)
+    this.itemOrder = _.map(properties.children, ({key, ref}, index) => {
+      return { key, ref, order: index }
+    })
+    this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
   }
 
   onStartDrag = (evt, gestureState) => {
@@ -140,12 +118,6 @@ class DraggableGrid extends Component {
       let itemOrder = _.sortBy(this.itemOrder, item=>item.order)
       this.onDragRelease( {itemOrder} )
     }
-  }
-
-  _getDistanceTo = (point) => {
-    let xDistance = this.dragPosition.x + this.activeBlockOffset.x - point.x
-    let yDistance = this.dragPosition.y + this.activeBlockOffset.y - point.y
-    return Math.sqrt( Math.pow(xDistance, 2) + Math.pow(yDistance, 2) )
   }
 
   assessGridSize = ({nativeEvent}) => {
@@ -222,7 +194,7 @@ class DraggableGrid extends Component {
                   left: this.state.blockPositions[key].currentPosition.getLayout().left
                 },
 
-                this.state.activeBlock == key && startDragWiggle,
+                this.state.activeBlock == key && this._blockActivationWiggle(),
                 this.state.activeBlock == key && { zIndex: 1 }
 
                 ]}
@@ -243,6 +215,40 @@ class DraggableGrid extends Component {
       </View>
   )}
 
+  // Helpers & other boring stuff
+
+  _getDistanceTo = (point) => {
+    let xDistance = this.dragPosition.x + this.activeBlockOffset.x - point.x
+    let yDistance = this.dragPosition.y + this.activeBlockOffset.y - point.y
+    return Math.sqrt( Math.pow(xDistance, 2) + Math.pow(yDistance, 2) )
+  }
+
+  _blockActivationWiggle = () => {
+    return { transform: [{ rotate: this.state.startDragWiggle.interpolate({
+      inputRange:  [0, 360],
+      outputRange: ['0 deg', '360 deg']})}]}
+  }
+
+  _assignReceivedPropertiesIntoThis(properties) {
+    Object.keys(properties).forEach(property => {
+      if (this[property])
+        this[property] = properties[property]
+    })
+  }
+
+  createTouchHandlers = () =>
+    this._panResponder = PanResponder.create({
+      onPanResponderTerminate:             (evt, gestureState) => {},
+      onStartShouldSetPanResponder:        (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onMoveShouldSetPanResponder:         (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
+      onShouldBlockNativeResponder:        (evt, gestureState) => false,
+      onPanResponderTerminationRequest:    (evt, gestureState) => false,
+      onPanResponderGrant:   this.onStartDrag,
+      onPanResponderMove:    this.onMoveBlock,
+      onPanResponderRelease: this.onReleaseBlock
+    })
 }
 
 const styles = StyleSheet.create({
