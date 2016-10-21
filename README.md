@@ -1,5 +1,5 @@
 
-<h3 align="center" style="margin-bottom: 20px;">
+<h3 align="center" style="margin-bottom: 21px;">
   Drag-and-drop -style rearrangable grid view
 </h3>
 
