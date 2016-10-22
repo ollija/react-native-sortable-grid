@@ -7,6 +7,13 @@
   <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
 </p>
 
+<p align="center">
+  <a href="https://gitter.im/react-native-sortable-grid/Lobby">
+    ![Gitter chat](https://badges.gitter.im/ollija/gitter.png)
+  </a>
+</p>
+
+
 # react-native-sortable-grid
 
 ## Installation
