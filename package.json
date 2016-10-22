@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/ollija/react-native-sortable-grid.git"
   },
+  "license": "MIT",
   "dependencies": {},
   "devDependencies": {
     "lodash": "^4.16.4"
