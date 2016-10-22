@@ -16,6 +16,8 @@
 
 # react-native-sortable-grid
 
+[![Join the chat at https://gitter.im/react-native-sortable-grid/Lobby](https://badges.gitter.im/react-native-sortable-grid/Lobby.svg)](https://gitter.im/react-native-sortable-grid/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Installation
 
 ``` npm i react-native-sortable-grid --save ```
