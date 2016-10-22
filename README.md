@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://gitter.im/react-native-sortable-grid/Lobby">
-    ![Gitter chat](https://badges.gitter.im/ollija/gitter.png)
+    <img src="https://badges.gitter.im/.svg" alt="Discuss in Gitter">
   </a>
 </p>
 
