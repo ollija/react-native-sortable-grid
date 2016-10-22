@@ -59,11 +59,11 @@ import SortableGrid from 'react-native-sortable-grid'
 
   How long must the user hold the press on the block until it becomes active and can be dragged (milliseconds)
 
- -  ``` onDragStart ``` **Callback**
+ -  ``` onDragStart ``` **Callback** *(activeItem)*
 
   Function that is called when the dragging starts. This can be used to lock other touch responders from listening to the touch such as ScrollViews and Swipers.
 
- -  ``` onDragRelease ``` **Callback** => *(itemOrder)*
+ -  ``` onDragRelease ``` **Callback** *(itemOrder)*
 
   Function that is executed after the drag is released. Will return the new item order.
 
