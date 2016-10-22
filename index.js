@@ -224,7 +224,8 @@ class DraggableGrid extends Component {
               <TouchableWithoutFeedback
                 style        = {{ flex: 1 }}
                 delayPressIn = { this.dragActivationTreshold }
-                onPressIn    = { this.activateDrag(key) }>
+                onPressIn    = { this.activateDrag(key) }
+                onPress      = { item.props.onTap }>
 
                 { item }
 
