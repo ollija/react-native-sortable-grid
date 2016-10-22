@@ -14,6 +14,7 @@ const ITEMS_PER_ROW                   = 4
 const DRAG_ACTIVATION_TRESHOLD        = 200 // Milliseconds
 const BLOCK_TRANSITION_DURATION       = 300 // Milliseconds
 const ACTIVE_BLOCK_CENTERING_DURATION = 200 // Milliseconds
+const DOUBLETAP_TRESHOLD              = 150 // Milliseconds
 
 class DraggableGrid extends Component {
 
@@ -24,6 +25,7 @@ class DraggableGrid extends Component {
     this.activeBlockCenteringDuration = ACTIVE_BLOCK_CENTERING_DURATION
     this.itemsPerRow                  = ITEMS_PER_ROW
     this.dragActivationTreshold       = DRAG_ACTIVATION_TRESHOLD
+    this.doubleTapTreshold            = DOUBLETAP_TRESHOLD
     this.onDragRelease                = () => {}
     this.onDragStart                  = () => {}
 
@@ -32,6 +34,10 @@ class DraggableGrid extends Component {
     this.activeBlockOffset = null
     this.rows              = null
     this.ghostBlocks       = []
+
+    this.tapTimer          = null
+    this.tapIgnore         = false
+    this.doubleTapWait     = false
 
     this.state = {
       gridLayout: null,
@@ -45,6 +51,8 @@ class DraggableGrid extends Component {
   componentWillMount = () => this.createTouchHandlers()
 
   componentDidMount = () => this.handleNewProps(this.props)
+
+  componentWillUnmount = () => { if (this.tapTimer) clearTimeout(this.tapTimer) }
 
   componentWillReceiveProps = (properties) => this.handleNewProps(properties)
 
@@ -185,6 +193,12 @@ class DraggableGrid extends Component {
     }).start()
   }
 
+  handleTap = ({onTap, onDoubleTap}) => () => {
+    if (this.tapIgnore) this._resetTapIgnoreTime()
+    else if (onDoubleTap != null) this.doubleTapWait ? this._onDoubleTap(onDoubleTap) : this._onSingleTap(onTap)
+    else onTap()
+  }
+
   render = () => {
     let gridLayout = this.state.gridLayout
     let blockWidth = this.state.blockWidth
@@ -225,7 +239,7 @@ class DraggableGrid extends Component {
                 style        = {{ flex: 1 }}
                 delayPressIn = { this.dragActivationTreshold }
                 onPressIn    = { this.activateDrag(key) }
-                onPress      = { item.props.onTap }>
+                onPress      = { this.handleTap(item.props) }>
 
                 { item }
 
@@ -271,6 +285,26 @@ class DraggableGrid extends Component {
       if (this[property])
         this[property] = properties[property]
     })
+  }
+
+  _onSingleTap = (onTap) => {
+    this.doubleTapWait = true
+    this.tapTimer = setTimeout( () => {
+      this.doubleTapWait = false
+      onTap()
+    }, this.doubleTapTreshold)
+  }
+
+  _onDoubleTap = (onDoubleTap) => {
+    this._resetTapIgnoreTime()
+    this.doubleTapWait = false
+    this.tapIgnore = true
+    onDoubleTap()
+  }
+
+  _resetTapIgnoreTime = () => {
+    clearTimeout(this.tapTimer)
+    this.tapTimer = setTimeout(() => this.tapIgnore = false, this.doubleTapTreshold)
   }
 
   createTouchHandlers = () =>
