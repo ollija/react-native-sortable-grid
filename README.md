@@ -7,13 +7,6 @@
   <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
 </p>
 
-<p align="center">
-  <a href="https://gitter.im/react-native-sortable-grid/Lobby">
-    <img src="https://badges.gitter.im/.svg" alt="Discuss in Gitter">
-  </a>
-</p>
-
-
 # react-native-sortable-grid
 
 [![Join the chat at https://gitter.im/react-native-sortable-grid/Lobby](https://badges.gitter.im/react-native-sortable-grid/Lobby.svg)](https://gitter.im/react-native-sortable-grid/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
