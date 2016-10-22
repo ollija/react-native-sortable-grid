@@ -27,7 +27,7 @@ class DraggableGrid extends Component {
     this.onDragRelease                = () => {}
     this.onDragStart                  = () => {}
 
-    this.itemOrder         = null
+    this.itemOrder         = []
     this.dragPosition      = null
     this.activeBlockOffset = null
     this.rows              = null
@@ -50,10 +50,8 @@ class DraggableGrid extends Component {
 
   handleNewProps = (properties) => {
     this._assignReceivedPropertiesIntoThis(properties)
-    this.itemOrder = _.map(properties.children, ({key, ref}, index) => {
-      return { key, ref, order: index }
-    })
-    this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
+    this._countRows(properties)
+    this._saveItemOrder(properties.children)
   }
 
   onStartDrag = (evt, gestureState) => {
@@ -238,6 +236,22 @@ class DraggableGrid extends Component {
   )}
 
   // Helpers & other boring stuff
+
+  _saveItemOrder = (items) => {
+    items.forEach( ({key, ref}, index) => {
+      if (!_.findKey(this.itemOrder, (oldItem) => oldItem.key === key)) {
+        this.itemOrder.push({ key, ref, order: index })
+      }
+    })
+  }
+
+  _countRows = (properties) => {
+    if (!this.rows ||
+        this.itemsPerRow != properties.itemsPerRow ||
+        properties.children.length !== this.props.children.length) {
+      this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
+    }
+  }
 
   _getDistanceTo = (point) => {
     let xDistance = this.dragPosition.x + this.activeBlockOffset.x - point.x
