@@ -59,6 +59,11 @@ import SortableGrid from 'react-native-sortable-grid'
 
   How long must the user hold the press on the block until it becomes active and can be dragged (milliseconds)
 
+ -  ``` doubleTapTreshold ``` **Number**
+
+  How long will the execution wait for the second tap before deciding it was a single tap (milliseconds).
+  Will be omitted if no onDoubleTap-property is given to the item being tapped - In which case single-tap callback will be executed instantly
+
  -  ``` onDragStart ``` **Callback** *(activeItem)*
 
   Function that is called when the dragging starts. This can be used to lock other touch responders from listening to the touch such as ScrollViews and Swipers.
@@ -73,7 +78,11 @@ import SortableGrid from 'react-native-sortable-grid'
 
  -  ``` onTap ``` **Callback**
 
-  Function that is executed when the block is tapped, but not pressed for long enough to activate the drag.
+  Function that is executed when the block is tapped once, but not pressed for long enough to activate the drag.
+
+ -  ``` onDoubleTap ``` **Callback**
+
+  Function that is executed when the block is double tapped within a timeframe of ```doubleTapTreshold``` (default 150ms). Assigning this will delay the execution of ```onTap```. Omitting this will cause all taps to be handled as single taps, regardless of their frequency.
 
 
 ## onDragRelease return value looks like this:
