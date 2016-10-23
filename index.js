@@ -44,7 +44,8 @@ class DraggableGrid extends Component {
       blockPositions: [],
       startDragWiggle: new Animated.Value(0),
       activeBlock: null,
-      blockWidth: null
+      blockWidth: null,
+      blockPositionsSetCount: 0
     }
   }
 
@@ -74,7 +75,7 @@ class DraggableGrid extends Component {
   }
 
   onMoveBlock = (evt, {moveX, moveY}) => {
-    if (this.state.activeBlock != null) {
+    if (this.state.activeBlock != null && this._blockPositionsSet()) {
 
       let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridLayout.height - this.blockWidth))
       let xChokeAmount = Math.max(0, (this.activeBlockOffset.x + moveX) - (this.state.gridLayout.width - this.blockWidth))
@@ -150,8 +151,9 @@ class DraggableGrid extends Component {
   }
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
-    if (this.state.blockPositions.length !== this.props.children.length) {
+    if (!this._blockPositionsSet()) {
       let blockPositions = this.state.blockPositions;
+      let blockPositionsSetCount = ++this.state.blockPositionsSetCount;
       let thisPosition = {
         x: nativeEvent.layout.x,
         y: nativeEvent.layout.y
@@ -160,9 +162,9 @@ class DraggableGrid extends Component {
         currentPosition : new Animated.ValueXY( thisPosition ),
         origin          : thisPosition
       }
-      this.setState({ blockPositions })
+      this.setState({ blockPositions, blockPositionsSetCount  })
 
-      if (blockPositions.length == this.props.children.length) {
+      if (this._blockPositionsSet()) {
         this.setGhostPositions()
       }
     }
@@ -202,7 +204,7 @@ class DraggableGrid extends Component {
   render = () => {
     let gridLayout = this.state.gridLayout
     let blockWidth = this.state.blockWidth
-    let blockPositionsSet = this.state.blockPositions.length == this.props.children.length
+    let blockPositionsSet = this._blockPositionsSet()
 
     return (
       <View
@@ -251,6 +253,8 @@ class DraggableGrid extends Component {
   )}
 
   // Helpers & other boring stuff
+
+  _blockPositionsSet = () => this.state.blockPositionsSetCount === this.props.children.length
 
   _saveItemOrder = (items) => {
     items.forEach( ({key, ref}, index) => {
