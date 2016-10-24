@@ -15,6 +15,7 @@ const DRAG_ACTIVATION_TRESHOLD        = 200 // Milliseconds
 const BLOCK_TRANSITION_DURATION       = 300 // Milliseconds
 const ACTIVE_BLOCK_CENTERING_DURATION = 200 // Milliseconds
 const DOUBLETAP_TRESHOLD              = 150 // Milliseconds
+const NULL_FN                         = () => {}
 
 class DraggableGrid extends Component {
 
@@ -195,7 +196,7 @@ class DraggableGrid extends Component {
     }).start()
   }
 
-  handleTap = ({onTap, onDoubleTap}) => () => {
+  handleTap = ({ onTap = NULL_FN, onDoubleTap = NULL_FN }) => () => {
     if (this.tapIgnore) this._resetTapIgnoreTime()
     else if (onDoubleTap != null) this.doubleTapWait ? this._onDoubleTap(onDoubleTap) : this._onSingleTap(onTap)
     else onTap()
