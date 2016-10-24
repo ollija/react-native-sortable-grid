@@ -89,7 +89,7 @@ class DraggableGrid extends Component {
 
       if (this.state.deleteModeOn) return this.deleteModeMove({x: moveX, y: moveY})
 
-      let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridHeight._value - this.blockWidth))
+      let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridLayout.height - this.blockWidth))
       let xChokeAmount = Math.max(0, (this.activeBlockOffset.x + moveX) - (this.state.gridLayout.width - this.blockWidth))
       let yMinChokeAmount = Math.min(0, this.activeBlockOffset.y + moveY)
       let xMinChokeAmount = Math.min(0, this.activeBlockOffset.x + moveX)
@@ -103,7 +103,7 @@ class DraggableGrid extends Component {
       let closest = this.state.activeBlock
       let closestDistance = distanceToOrigin
       this.state.blockPositions.forEach( (block, index) => {
-        if (index !== this.state.activeBlock) {
+        if (index !== this.state.activeBlock && block.origin) {
           let blockPosition = block.origin
           let distance = this._getDistanceTo(blockPosition)
           if (distance < closestDistance) {
@@ -151,6 +151,7 @@ class DraggableGrid extends Component {
 
       if (state.deleteModeOn && state.deletionSwipePercent == 100) {
         this.setState({deleteBlock: activeBlock})
+        state.deleteBlockOpacity.setValue(1)
         Animated.timing(
           state.deleteBlockOpacity,
           { toValue: 0, duration: 2 * this.activeBlockCenteringDuration }
@@ -179,7 +180,7 @@ class DraggableGrid extends Component {
             this.state.blockPositions[currentBlockIndex].origin = this.state.blockPositions[previousBlockIndex].origin
             this.itemOrder[currentBlockIndex].order--
           }
-          state.blockPositions[ activeBlock ].origin = {x: null, y: null}
+          state.blockPositions[ activeBlock ].origin = null
           this._countRows()
         })
       }
@@ -283,6 +284,8 @@ class DraggableGrid extends Component {
       >
         { gridLayout &&
           this.props.children.map( (item, key) =>
+
+            this.state.deletedItems.indexOf(key) == -1 &&
             <Animated.View
               key = {key}
               style = {[
@@ -299,8 +302,7 @@ class DraggableGrid extends Component {
                 this.state.activeBlock == key && this._blockActivationWiggle(),
                 this.state.activeBlock == key && { zIndex: 1 },
 
-                this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity },
-                this.state.deletedItems.indexOf(key) != -1 && { opacity: 0 }
+                this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity }
 
                 ]}
               onLayout = { this.saveBlockPositions(key) }
