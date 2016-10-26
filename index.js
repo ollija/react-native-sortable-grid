@@ -59,7 +59,11 @@ class DraggableGrid extends Component {
     }
   }
 
-  toggleDeleteMode = () => this.setState({ deleteModeOn: !this.state.deleteModeOn })
+  toggleDeleteMode = () => {
+    let deleteModeOn = !this.state.deleteModeOn
+    this.setState({ deleteModeOn })
+    return { deleteModeOn }
+  }
 
   componentWillMount = () => this.createTouchHandlers()
 
