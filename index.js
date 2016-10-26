@@ -28,7 +28,6 @@ class DraggableGrid extends Component {
     this.itemsPerRow                  = ITEMS_PER_ROW
     this.dragActivationTreshold       = DRAG_ACTIVATION_TRESHOLD
     this.doubleTapTreshold            = DOUBLETAP_TRESHOLD
-    this.doubleTapDeleteMode          = DOUBLETAP_DELETE_MODE
     this.onDragRelease                = () => {}
     this.onDragStart                  = () => {}
 
@@ -38,6 +37,7 @@ class DraggableGrid extends Component {
     this.rows              = null
     this.blockWidth        = null
     this.ghostBlocks       = []
+    this.gridHeightTarget  = null
 
     this.tapTimer          = null
     this.tapIgnore         = false
@@ -58,6 +58,8 @@ class DraggableGrid extends Component {
       deletedItems: []
     }
   }
+
+  toggleDeleteMode = () => this.setState({ deleteModeOn: !this.state.deleteModeOn })
 
   componentWillMount = () => this.createTouchHandlers()
 
@@ -106,7 +108,7 @@ class DraggableGrid extends Component {
         if (index !== this.state.activeBlock && block.origin) {
           let blockPosition = block.origin
           let distance = this._getDistanceTo(blockPosition)
-          if (distance < closestDistance) {
+          if (distance < closestDistance && distance < this.state.blockWidth) {
             closest = index
             closestDistance = distance
           }
@@ -214,10 +216,12 @@ class DraggableGrid extends Component {
 
   assessGridSize = ({nativeEvent}) => {
     this.blockWidth = nativeEvent.layout.width / this.itemsPerRow
-    this.setState({
-      gridLayout: nativeEvent.layout,
-      blockWidth: this.blockWidth
-    })
+    if (this.state.gridLayout != nativeEvent.layout) {
+      this.setState({
+        gridLayout: nativeEvent.layout,
+        blockWidth: this.blockWidth
+      })
+    }
   }
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
@@ -235,6 +239,7 @@ class DraggableGrid extends Component {
       this.setState({ blockPositions, blockPositionsSetCount  })
 
       if (this._blockPositionsSet()) {
+        this._countRows()
         this.setGhostPositions()
       }
     }
@@ -266,9 +271,8 @@ class DraggableGrid extends Component {
   }
 
   handleTap = ({onTap = ()=>{}, onDoubleTap = ()=>{}}) => () => {
-    if (this.state.deleteModeOn) this.setState({deleteModeOn: false})
-    else if (this.tapIgnore) this._resetTapIgnoreTime()
-    else if (onDoubleTap != null || this.doubleTapDeleteMode) {
+    if (this.tapIgnore) this._resetTapIgnoreTime()
+    else if (onDoubleTap != null) {
       this.doubleTapWait ? this._onDoubleTap(onDoubleTap) : this._onSingleTap(onTap)
     } else onTap()
   }
@@ -372,11 +376,28 @@ class DraggableGrid extends Component {
   _countRows = (properties) => {
     if (!properties) {
       this.rows = Math.ceil((this.props.children.length - this.state.deletedItems.length) / this.itemsPerRow)
-      this.state.gridHeight.setValue(this.rows * this.state.blockWidth)
-    } else if (!this.rows || this.itemsPerRow != properties.itemsPerRow ||
+    }
+    else if (!this.rows || this.itemsPerRow != properties.itemsPerRow ||
       properties.children.length !== this.props.children.length) {
       this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
-      this.state.gridHeight.setValue(this.rows * this.state.blockWidth)
+    }
+
+    if (this.state.blockWidth)
+      this._animateGridHeight()
+  }
+
+  _animateGridHeight = () => {
+    this.gridHeightTarget = this.rows * this.state.blockWidth
+    if (this.gridHeightTarget === this.state.gridLayout.height || this.state.gridLayout.height === 0)
+      this.state.gridHeight.setValue(this.gridHeightTarget)
+    else if (this.state.gridHeight._value !== this.gridHeightTarget) {
+      Animated.timing(
+        this.state.gridHeight,
+        {
+          toValue: this.gridHeightTarget,
+          duration: this.blockTransitionDuration
+        }
+      ).start()
     }
   }
 
@@ -411,8 +432,7 @@ class DraggableGrid extends Component {
     this._resetTapIgnoreTime()
     this.doubleTapWait = false
     this.tapIgnore = true
-    if (this.doubleTapDeleteMode) this.setState({deleteModeOn: true})
-    else onDoubleTap()
+    onDoubleTap()
   }
 
   _resetTapIgnoreTime = () => {
@@ -437,7 +457,6 @@ class DraggableGrid extends Component {
 
 const styles = StyleSheet.create({
 draggableGrid: {
-  flex: 1,
   flexDirection: 'row',
   flexWrap: 'wrap'
 }
