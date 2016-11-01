@@ -327,14 +327,14 @@ class DraggableGrid extends Component {
                 onPressIn    = { this.activateDrag(key) }
                 onPress      = { this.handleTap(item.props) }>
 
-                <View style={{justifyContent: 'center'}}>
-                  <View style={this.state.activeBlock == key &&
+                <View style={{flex: 1, justifyContent: 'center'}}>
+                  <View style={[{ flex: 1 }, this.state.activeBlock == key &&
                   this.state.deleteModeOn && this.state.blockPositions[ key ].origin &&
                   { opacity: 1.5
                     - (this.state.blockPositions[ key ].currentPosition.y._value
                     + this.state.blockPositions[ key ].currentPosition.y._offset
                     - this.state.blockPositions[ key ].origin.y) / 50
-                  }}>
+                  }]}>
                     { item }
                   </View>
 
