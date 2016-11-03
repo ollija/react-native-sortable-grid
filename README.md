@@ -4,8 +4,7 @@
 </h3>
 
 <p align="center">
-  <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif" style="margin:0 20px;">
-  <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif" style="margin:0 20px;">
+  <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
 </p>
 
 # react-native-sortable-grid
@@ -50,6 +49,7 @@ import SortableGrid from 'react-native-sortable-grid'
 
   *  When a row becomes empty of items due to item deletion, the height of the grid is smoothly adjusted to fit the new rows. However, passing ```flex:1``` inside the style prop will cause the grid to fill up the available space and not adjust height when rows become empty.
   * User cannot drag items outside of the grid. Assigning ```flex:1``` will expand the grid, therefore giving more space for the items to be dragged in.
+  * When deleting items from the last row on Android, the items can get clipped. You can workaround this by giving the grid ```bottomPadding```. (This is <a href="https://facebook.github.io/react-native/releases/0.26/docs/known-issues.html#the-overflow-style-property-defaults-to-hidden-and-cannot-be-changed-on-android">a know issue</a> with ```overflow```-property on Android)
 
 
  -  ``` blockTransitionDuration ``` **Number**
@@ -150,3 +150,28 @@ Object {
  </SortableGrid>
 
 ```
+
+## Demos
+
+<p align="center">
+
+  <b>Basic item deletion</b><br>toggleDeleteMode() is called during onTap in this example<br><br>
+  <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif">
+  <br><br>
+
+  <b>Smooth resizing of the grid when the last row becomes empty:</b><br><br>
+  <img alt="Issue Stats" src="http://i.giphy.com/PEU01yJh997qM.gif">
+  <br><br>
+
+  <b>No grid resizing if the grid has ```flex:1``` assigned:</b><br><br>
+  <img alt="Issue Stats" src="http://i.giphy.com/fxBIhIkzydDW0.gif">
+  <br><br>
+
+  <b>The item drag is constrained within the grid:</b><br><br>
+  <img alt="Issue Stats" src="http://i.giphy.com/4YsV4fvEmb9Dy.gif">
+  <br><br>
+
+  <b>With ```flex:1``` there is more space to drag:</b><br><br>
+  <img alt="Issue Stats" src="http://i.giphy.com/lX4NyomLbnRvi.gif">
+
+</p>
