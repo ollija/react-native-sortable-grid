@@ -75,7 +75,7 @@ class DraggableGrid extends Component {
 
   handleNewProps = (properties) => {
     this._assignReceivedPropertiesIntoThis(properties)
-    this._reAssessGridRows(properties)
+    this.reAssessGridRows(properties)
     this._saveItemOrder(properties.children)
   }
 
@@ -159,10 +159,9 @@ class DraggableGrid extends Component {
     this.setState({ deleteBlock: this.state.activeBlock })
     this.blockAnimateFadeOut()
     .then( () => {
-      this.addActiveBlockToDeletedItems()
       this.reorderBlocksAfterDeletion()
-      this._getActiveBlock().origin = null
-      this._reAssessGridRows()
+      this.addActiveBlockToDeletedItems()
+      this.reAssessGridRows()
       this.afterDragRelease()
     })
   }
@@ -205,6 +204,7 @@ class DraggableGrid extends Component {
     let deletedItems = this.state.deletedItems
     deletedItems.push(this.state.activeBlock)
     this.setState({ deletedItems })
+    this._getActiveBlock().origin = null
   }
 
   returnBlockToOriginalPosition = () => {
@@ -246,6 +246,17 @@ class DraggableGrid extends Component {
     }
   }
 
+  reAssessGridRows = (properties) => {
+    if (!properties) {
+      this.rows = Math.ceil((this.props.children.length - this.state.deletedItems.length) / this.itemsPerRow)
+    }
+    else if (!this.rows || this.itemsPerRow != properties.itemsPerRow ||
+      properties.children.length !== this.props.children.length) {
+      this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
+    }
+    if (this.state.blockWidth) this._animateGridHeight()
+  }
+
   saveBlockPositions = (key) => ({nativeEvent}) => {
     if (!this._blockPositionsSet()) {
       let blockPositions = this.state.blockPositions;
@@ -261,7 +272,7 @@ class DraggableGrid extends Component {
       this.setState({ blockPositions, blockPositionsSetCount  })
 
       if (this._blockPositionsSet()) {
-        this._reAssessGridRows()
+        this.reAssessGridRows()
         this.setGhostPositions()
       }
     }
@@ -395,19 +406,6 @@ class DraggableGrid extends Component {
         this.itemOrder.push({ key, ref, order: index })
       }
     })
-  }
-
-  _reAssessGridRows = (properties) => {
-    if (!properties) {
-      this.rows = Math.ceil((this.props.children.length - this.state.deletedItems.length) / this.itemsPerRow)
-    }
-    else if (!this.rows || this.itemsPerRow != properties.itemsPerRow ||
-      properties.children.length !== this.props.children.length) {
-      this.rows = Math.ceil(properties.children.length / this.itemsPerRow)
-    }
-
-    if (this.state.blockWidth)
-      this._animateGridHeight()
   }
 
   _animateGridHeight = () => {
