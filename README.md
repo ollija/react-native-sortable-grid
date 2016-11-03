@@ -44,6 +44,14 @@ import SortableGrid from 'react-native-sortable-grid'
 
 ## SortableGrid properties
 
+ -  ``` style ``` **Object**
+
+  Custom styles to override or complement the sortableGrid native style.
+
+  *  When a row becomes empty of items due to item deletion, the height of the grid is smoothly adjusted to fit the new rows. However, passing ```flex:1``` inside the style prop will cause the grid to fill up the available space and not adjust height when rows become empty.
+  * User cannot drag items outside of the grid. Assigning ```flex:1``` will expand the grid, therefore giving more space for the items to be dragged in.
+
+
  -  ``` blockTransitionDuration ``` **Number**
 
   How long should the transition of a passive block take when the active block takes its place (milliseconds)
