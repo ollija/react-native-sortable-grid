@@ -75,25 +75,25 @@ class DraggableGrid extends Component {
 
   handleNewProps = (properties) => {
     this._assignReceivedPropertiesIntoThis(properties)
-    this._countRows(properties)
+    this._reAssessGridRows(properties)
     this._saveItemOrder(properties.children)
   }
 
   onStartDrag = (evt, gestureState) => {
     if (this.state.activeBlock != null) {
-      let activeBlockPosition = this.state.blockPositions[ this.state.activeBlock ].origin
+      let activeBlockPosition = this._getActiveBlock().origin
       let x = activeBlockPosition.x - gestureState.x0
       let y = activeBlockPosition.y - gestureState.y0
       this.activeBlockOffset = { x, y }
-      this.state.blockPositions[this.state.activeBlock].currentPosition.setOffset({ x, y })
-      this.state.blockPositions[this.state.activeBlock].currentPosition.setValue({ x: gestureState.moveX, y: gestureState.moveY })
+      this._getActiveBlock().currentPosition.setOffset({ x, y })
+      this._getActiveBlock().currentPosition.setValue({ x: gestureState.moveX, y: gestureState.moveY })
     }
   }
 
   onMoveBlock = (evt, {moveX, moveY}) => {
     if (this.state.activeBlock != null && this._blockPositionsSet()) {
 
-      if (this.state.deleteModeOn) return this.deleteModeMove({x: moveX, y: moveY})
+      if (this.state.deleteModeOn) return this.deleteModeMove({ x: moveX, y: moveY })
 
       let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridLayout.height - this.blockWidth))
       let xChokeAmount = Math.max(0, (this.activeBlockOffset.x + moveX) - (this.state.gridLayout.width - this.blockWidth))
@@ -102,9 +102,9 @@ class DraggableGrid extends Component {
 
       let dragPosition = { x: moveX - xChokeAmount - xMinChokeAmount, y: moveY - yChokeAmount - yMinChokeAmount }
       this.dragPosition = dragPosition
-      let originalPosition = this.state.blockPositions[ this.state.activeBlock ].origin
+      let originalPosition = this._getActiveBlock().origin
       let distanceToOrigin = this._getDistanceTo(originalPosition)
-      this.state.blockPositions[this.state.activeBlock].currentPosition.setValue(dragPosition)
+      this._getActiveBlock().currentPosition.setValue(dragPosition)
 
       let closest = this.state.activeBlock
       let closestDistance = distanceToOrigin
@@ -131,12 +131,12 @@ class DraggableGrid extends Component {
         Animated.timing(
           this.state.blockPositions[closest].currentPosition,
           {
-            toValue: this.state.blockPositions[this.state.activeBlock].origin,
+            toValue: this._getActiveBlock().origin,
             duration: this.blockTransitionDuration
           }
         ).start()
         let blockPositions = this.state.blockPositions
-        blockPositions[this.state.activeBlock].origin = blockPositions[closest].origin
+        this._getActiveBlock().origin = blockPositions[closest].origin
         blockPositions[closest].origin = originalPosition
         this.setState({ blockPositions })
 
@@ -148,73 +148,91 @@ class DraggableGrid extends Component {
   }
 
   onReleaseBlock = (evt, gestureState) => {
+    this.returnBlockToOriginalPosition()
+    if (this.state.deleteModeOn && this.state.deletionSwipePercent == 100)
+      this.deleteBlock()
+    else
+      this.afterDragRelease()
+  }
+
+  deleteBlock = () => {
+    this.setState({ deleteBlock: this.state.activeBlock })
+    this.blockAnimateFadeOut()
+    .then( () => {
+      this.addActiveBlockToDeletedItems()
+      this.reorderBlocksAfterDeletion()
+      this._getActiveBlock().origin = null
+      this._reAssessGridRows()
+      this.afterDragRelease()
+    })
+  }
+
+  blockAnimateFadeOut = () => {
+    this.state.deleteBlockOpacity.setValue(1)
+    return new Promise( (resolve, reject) => {
+      Animated.timing(
+        this.state.deleteBlockOpacity,
+        { toValue: 0, duration: 2 * this.activeBlockCenteringDuration }
+      ).start(resolve)
+    })
+  }
+
+  reorderBlocksAfterDeletion = () => {
     let state = this.state
     let activeBlock = state.activeBlock
+    let itemOrder = _.cloneDeep(this.itemOrder)
+    let currentBlockOrderNumber = itemOrder[activeBlock].order
+    let orderedBlocks = _.sortBy(itemOrder, item=>item.order).filter(item => item.order != null)
+    this.itemOrder[activeBlock].order = null
+    let previousBlockOrder = null
 
-    if (activeBlock != null) {
-      let activeBlockCurrentPosition = state.blockPositions[ activeBlock ].currentPosition
-      let activeBlockOrigin = state.blockPositions[ activeBlock ].origin
-
-      activeBlockCurrentPosition.flattenOffset()
+    for (let i = orderedBlocks.length-1; i > currentBlockOrderNumber; --i) {
+      let previousBlockIndex = _.findIndex(itemOrder, item => item.order == i - 1)
+      let currentBlockIndex = _.findIndex(itemOrder, item => item.order == i)
       Animated.timing(
-        activeBlockCurrentPosition,
-        { toValue: activeBlockOrigin, duration: this.activeBlockCenteringDuration }
+        this.state.blockPositions[currentBlockIndex].currentPosition,
+        {
+          toValue: this.state.blockPositions[previousBlockIndex].origin,
+          duration: this.blockTransitionDuration
+        }
       ).start()
-
-      if (state.deleteModeOn && state.deletionSwipePercent == 100) {
-        this.setState({deleteBlock: activeBlock})
-        state.deleteBlockOpacity.setValue(1)
-        Animated.timing(
-          state.deleteBlockOpacity,
-          { toValue: 0, duration: 2 * this.activeBlockCenteringDuration }
-        ).start( () => {
-          let deletedItems = this.state.deletedItems
-          deletedItems.push(activeBlock)
-          this.setState({deletedItems})
-
-          let itemOrder = _.cloneDeep(this.itemOrder)
-          let currentBlockOrderNumber = itemOrder[activeBlock].order
-          let orderedBlocks = _.sortBy(itemOrder, item=>item.order).filter(item => item.order != null)
-          this.itemOrder[activeBlock].order = null
-
-          let previousBlockOrder = null
-
-          for (let i = orderedBlocks.length-1; i > currentBlockOrderNumber; --i) {
-            let previousBlockIndex = _.findIndex(itemOrder, item => item.order == i - 1)
-            let currentBlockIndex = _.findIndex(itemOrder, item => item.order == i)
-            Animated.timing(
-              this.state.blockPositions[currentBlockIndex].currentPosition,
-              {
-                toValue: this.state.blockPositions[previousBlockIndex].origin,
-                duration: this.blockTransitionDuration
-              }
-            ).start()
-            this.state.blockPositions[currentBlockIndex].origin = this.state.blockPositions[previousBlockIndex].origin
-            this.itemOrder[currentBlockIndex].order--
-          }
-          state.blockPositions[ activeBlock ].origin = null
-          this._countRows()
-          this.setState({activeBlock: null})
-          let sortedOrder = _.sortBy(this.itemOrder, item=>item.order)
-          this.onDragRelease( {itemOrder: sortedOrder} )
-        })
-      }
-      else {
-        this.setState({activeBlock: null})
-        let itemOrder = _.sortBy(this.itemOrder, item=>item.order)
-        this.onDragRelease( {itemOrder} )
-      }
+      this.state.blockPositions[currentBlockIndex].origin = this.state.blockPositions[previousBlockIndex].origin
+      this.itemOrder[currentBlockIndex].order--
     }
+  }
+
+  addActiveBlockToDeletedItems = () => {
+    let deletedItems = this.state.deletedItems
+    deletedItems.push(this.state.activeBlock)
+    this.setState({ deletedItems })
+  }
+
+  returnBlockToOriginalPosition = () => {
+    let activeBlockCurrentPosition = this._getActiveBlock().currentPosition
+    activeBlockCurrentPosition.flattenOffset()
+    Animated.timing(
+      activeBlockCurrentPosition,
+      {
+        toValue: this._getActiveBlock().origin,
+        duration: this.activeBlockCenteringDuration
+      }
+    ).start()
+  }
+
+  afterDragRelease = () => {
+    let itemOrder = _.sortBy( this.itemOrder, item => item.order )
+    this.onDragRelease({ itemOrder })
+    this.setState({ activeBlock: null })
   }
 
   deleteModeMove = ({x, y}) => {
     let slideDistance = 50
-    let moveY = y + this.activeBlockOffset.y - this.state.blockPositions[this.state.activeBlock].origin.y
+    let moveY = y + this.activeBlockOffset.y - this._getActiveBlock().origin.y
     let adjustY = 0
     if (moveY < 0) adjustY = moveY
     else if (moveY > slideDistance) adjustY = moveY - slideDistance
     let deletionSwipePercent = (moveY - adjustY) / slideDistance * 100
-    this.state.blockPositions[this.state.activeBlock].currentPosition.y.setValue(y - adjustY)
+    this._getActiveBlock().currentPosition.y.setValue(y - adjustY)
     this.setState({deletionSwipePercent})
   }
 
@@ -243,7 +261,7 @@ class DraggableGrid extends Component {
       this.setState({ blockPositions, blockPositionsSetCount  })
 
       if (this._blockPositionsSet()) {
-        this._countRows()
+        this._reAssessGridRows()
         this.setGhostPositions()
       }
     }
@@ -367,6 +385,8 @@ class DraggableGrid extends Component {
 
   // Helpers & other boring stuff
 
+  _getActiveBlock = () => this.state.blockPositions[ this.state.activeBlock ]
+
   _blockPositionsSet = () => this.state.blockPositionsSetCount === this.props.children.length
 
   _saveItemOrder = (items) => {
@@ -377,7 +397,7 @@ class DraggableGrid extends Component {
     })
   }
 
-  _countRows = (properties) => {
+  _reAssessGridRows = (properties) => {
     if (!properties) {
       this.rows = Math.ceil((this.props.children.length - this.state.deletedItems.length) / this.itemsPerRow)
     }
@@ -453,9 +473,9 @@ class DraggableGrid extends Component {
       onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
       onShouldBlockNativeResponder:        (evt, gestureState) => false,
       onPanResponderTerminationRequest:    (evt, gestureState) => false,
-      onPanResponderGrant:   this.onStartDrag,
-      onPanResponderMove:    this.onMoveBlock,
-      onPanResponderRelease: this.onReleaseBlock
+      onPanResponderGrant:   this.state.activeBlock != null ? null : this.onStartDrag,
+      onPanResponderMove:    this.state.activeBlock != null ? null : this.onMoveBlock,
+      onPanResponderRelease: this.state.activeBlock != null ? null : this.onReleaseBlock
     })
 }
 
