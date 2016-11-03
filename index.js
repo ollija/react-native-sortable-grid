@@ -314,85 +314,47 @@ class DraggableGrid extends Component {
     } else onTap()
   }
 
-  render = () => {
-    let gridLayout = this.state.gridLayout
-    let blockWidth = this.state.blockWidth
-    let blockPositionsSet = this._blockPositionsSet()
+  render = () =>
 
-    return (
-      <Animated.View
-        style = {[
-          styles.draggableGrid,
-          this.props.style,
-          blockPositionsSet && { height: this.state.gridHeight }
-        ]}
-        onLayout= { this.assessGridSize }
-      >
-        { gridLayout &&
-          this.props.children.map( (item, key) => {
+    <Animated.View
+      style={ this._getGridStyle() }
+      onLayout={ this.assessGridSize }
+    >
 
-            return (
-              <Animated.View
-                key = {key}
-                style = {[
-                  { width: blockWidth,
-                    height: blockWidth,
-                    justifyContent: 'center' },
+      { this.state.gridLayout &&
+        this.props.children.map( (item, key) =>
+          <Animated.View
+            key = {key}
+            style = { this._getBlockStyle(key) }
+            onLayout = { this.saveBlockPositions(key) }
+            {...this._panResponder.panHandlers}
+          >
+              <TouchableWithoutFeedback
+                style        = {{ flex: 1 }}
+                delayPressIn = { this.dragActivationTreshold }
+                onPressIn    = { this.activateDrag(key) }
+                onPress      = { this.handleTap(item.props) }>
 
-                  blockPositionsSet &&
-                  { position: 'absolute',
-                    top: this._getBlock(key).currentPosition.getLayout().top,
-                    left: this._getBlock(key).currentPosition.getLayout().left
-                  },
+                  <View style={styles.itemImageContainer}>
 
-                  this.state.activeBlock == key && this._blockActivationWiggle(),
-                  this.state.activeBlock == key && { zIndex: 1 },
-                  this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity },
-                  this.state.deletedItems.indexOf(key) !== -1 && styles.deletedBlock
+                      <View style={ this._getItemWrapperStyle(key) }>
+                          { item }
+                      </View>
 
-                  ]}
-                onLayout = { this.saveBlockPositions(key) }
-                {...this._panResponder.panHandlers}
-              >
-                <TouchableWithoutFeedback
-                  style        = {{ flex: 1 }}
-                  delayPressIn = { this.dragActivationTreshold }
-                  onPressIn    = { this.activateDrag(key) }
-                  onPress      = { this.handleTap(item.props) }>
-
-                  <View style={{flex: 1, justifyContent: 'center'}}>
-
-                    <View style={ this._getItemWrapperStyle(key) }>
-                      { item }
-                    </View>
-
-                    { this.state.deleteModeOn &&
-                      <Image
-                        style={[{
-                          position: 'absolute',
-                          top: this.state.blockWidth/2 - 15,
-                          left: this.state.blockWidth/2 - 15,
-                          width: 30,
-                          height: 30,
-                          opacity: .2},
-                          this.state.activeBlock == key && this._getBlock( key ).origin &&
-                          { opacity: .2
-                            + ((this._getBlock( key ).currentPosition.y._value
-                            +   this._getBlock( key ).currentPosition.y._offset
-                            -   this._getBlock( key ).origin.y) / 50)
-                          }]}
-                        source={require('./assets/delete.png')}
-                      />
-                    }
+                      { this.state.deleteModeOn &&
+                        <Image
+                          style={ this._getImageDeleteIconStyle(key) }
+                          source={require('./assets/delete.png')}
+                        />
+                      }
 
                   </View>
-                </TouchableWithoutFeedback>
-              </Animated.View>
-            )
-          })
-        }
-      </Animated.View>
-  )}
+
+              </TouchableWithoutFeedback>
+
+          </Animated.View>
+      )}
+    </Animated.View>
 
   // Helpers & other boring stuff
 
@@ -478,18 +440,56 @@ class DraggableGrid extends Component {
       onPanResponderRelease: this.state.activeBlock != null ? null : this.onReleaseBlock
     })
 
+  // Style getters
+
+  _getGridStyle = () => [
+    styles.draggableGrid,
+    this.props.style,
+    this._blockPositionsSet() && { height: this.state.gridHeight }
+  ]
+
   _getItemWrapperStyle = (key) => [
     { flex: 1 },
        this.state.activeBlock == key
     && this.state.deleteModeOn
     && this._getBlock( key ).origin
     &&
-    { opacity: 1.5 -
-      (   this._getBlock( key ).currentPosition.y._value
-        + this._getBlock( key ).currentPosition.y._offset
-        - this._getBlock( key ).origin.y
-      ) / 50
-    }
+    { opacity: 1.5 - this._getDynamicOpacity(key) }
+  ]
+
+  _getImageDeleteIconStyle = (key) => [
+    { position: 'absolute',
+      top: this.state.blockWidth/2 - 15,
+      left: this.state.blockWidth/2 - 15,
+      width: 30,
+      height: 30,
+      opacity: .2
+    },
+    this.state.activeBlock == key
+    && this._getBlock( key ).origin
+    &&
+    { opacity: .2 + this._getDynamicOpacity(key) }
+  ]
+
+  _getDynamicOpacity = (key) =>
+    (   this._getBlock( key ).currentPosition.y._value
+      + this._getBlock( key ).currentPosition.y._offset
+      - this._getBlock( key ).origin.y
+    ) / 50
+
+  _getBlockStyle = (key) => [
+    { width: this.state.blockWidth,
+      height: this.state.blockWidth,
+      justifyContent: 'center' },
+    this._blockPositionsSet() &&
+    { position: 'absolute',
+      top: this._getBlock(key).currentPosition.getLayout().top,
+      left: this._getBlock(key).currentPosition.getLayout().left
+    },
+    this.state.activeBlock == key && this._blockActivationWiggle(),
+    this.state.activeBlock == key && { zIndex: 1 },
+    this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity },
+    this.state.deletedItems.indexOf(key) !== -1 && styles.deletedBlock
   ]
 
 }
@@ -507,6 +507,10 @@ const styles = StyleSheet.create(
     top: 0,
     height: 0,
     width: 0
+  },
+  itemImageContainer: {
+    flex: 1,
+    justifyContent: 'center'
   }
 })
 
