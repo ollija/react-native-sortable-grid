@@ -30,6 +30,7 @@ class DraggableGrid extends Component {
     this.doubleTapTreshold            = DOUBLETAP_TRESHOLD
     this.onDragRelease                = () => {}
     this.onDragStart                  = () => {}
+    this.onDeleteItem                 = () => {}
 
     this.itemOrder         = []
     this.dragPosition      = null
@@ -162,6 +163,7 @@ class DraggableGrid extends Component {
       this.reorderBlocksAfterDeletion()
       this.addActiveBlockToDeletedItems()
       this.reAssessGridRows()
+      this.onDeleteItem({ item: this.itemOrder[ this.state.activeBlock ] })
       this.afterDragRelease()
     })
   }
