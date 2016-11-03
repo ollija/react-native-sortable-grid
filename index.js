@@ -129,7 +129,7 @@ class DraggableGrid extends Component {
 
       if (closest !== this.state.activeBlock) {
         Animated.timing(
-          this.state.blockPositions[closest].currentPosition,
+          this._getBlock(closest).currentPosition,
           {
             toValue: this._getActiveBlock().origin,
             duration: this.blockTransitionDuration
@@ -177,27 +177,29 @@ class DraggableGrid extends Component {
   }
 
   reorderBlocksAfterDeletion = () => {
-    let state = this.state
-    let activeBlock = state.activeBlock
     let itemOrder = _.cloneDeep(this.itemOrder)
-    let currentBlockOrderNumber = itemOrder[activeBlock].order
+    let currentBlockOrderNumber = itemOrder[ this.state.activeBlock ].order
     let orderedBlocks = _.sortBy(itemOrder, item=>item.order).filter(item => item.order != null)
-    this.itemOrder[activeBlock].order = null
-    let previousBlockOrder = null
+    this.itemOrder[ this.state.activeBlock ].order = null
 
     for (let i = orderedBlocks.length-1; i > currentBlockOrderNumber; --i) {
       let previousBlockIndex = _.findIndex(itemOrder, item => item.order == i - 1)
       let currentBlockIndex = _.findIndex(itemOrder, item => item.order == i)
-      Animated.timing(
-        this.state.blockPositions[currentBlockIndex].currentPosition,
-        {
-          toValue: this.state.blockPositions[previousBlockIndex].origin,
-          duration: this.blockTransitionDuration
-        }
-      ).start()
-      this.state.blockPositions[currentBlockIndex].origin = this.state.blockPositions[previousBlockIndex].origin
+
+      this.animateBlockMove(currentBlockIndex, this._getBlock(previousBlockIndex).origin)
+      this._getBlock(currentBlockIndex).origin = this._getBlock(previousBlockIndex).origin
       this.itemOrder[currentBlockIndex].order--
     }
+  }
+
+  animateBlockMove = (blockIndex, position) => {
+    Animated.timing(
+      this._getBlock(blockIndex).currentPosition,
+      {
+        toValue: position,
+        duration: this.blockTransitionDuration
+      }
+    ).start()
   }
 
   addActiveBlockToDeletedItems = () => {
@@ -335,8 +337,8 @@ class DraggableGrid extends Component {
 
                 blockPositionsSet &&
                 { position: 'absolute',
-                  top: this.state.blockPositions[key].currentPosition.getLayout().top,
-                  left: this.state.blockPositions[key].currentPosition.getLayout().left
+                  top: this._getBlock(key).currentPosition.getLayout().top,
+                  left: this._getBlock(key).currentPosition.getLayout().left
                 },
 
                 this.state.activeBlock == key && this._blockActivationWiggle(),
@@ -358,11 +360,11 @@ class DraggableGrid extends Component {
 
                 <View style={{flex: 1, justifyContent: 'center'}}>
                   <View style={[{ flex: 1 }, this.state.activeBlock == key &&
-                  this.state.deleteModeOn && this.state.blockPositions[ key ].origin &&
+                  this.state.deleteModeOn && this._getBlock( key ).origin &&
                   { opacity: 1.5
-                    - (this.state.blockPositions[ key ].currentPosition.y._value
-                    + this.state.blockPositions[ key ].currentPosition.y._offset
-                    - this.state.blockPositions[ key ].origin.y) / 50
+                    - (this._getBlock( key ).currentPosition.y._value
+                    + this._getBlock( key ).currentPosition.y._offset
+                    - this._getBlock( key ).origin.y) / 50
                   }]}>
                     { item }
                   </View>
@@ -376,11 +378,11 @@ class DraggableGrid extends Component {
                       width: 30,
                       height: 30,
                       opacity: .2},
-                      this.state.activeBlock == key && this.state.blockPositions[ key ].origin &&
+                      this.state.activeBlock == key && this._getBlock( key ).origin &&
                       { opacity: .2
-                        + ((this.state.blockPositions[ key ].currentPosition.y._value
-                        + this.state.blockPositions[ key ].currentPosition.y._offset
-                        - this.state.blockPositions[ key ].origin.y) / 50) }]}
+                        + ((this._getBlock( key ).currentPosition.y._value
+                        + this._getBlock( key ).currentPosition.y._offset
+                        - this._getBlock( key ).origin.y) / 50) }]}
                     source={require('./assets/delete.png')}
                   />}
 
@@ -397,6 +399,7 @@ class DraggableGrid extends Component {
   // Helpers & other boring stuff
 
   _getActiveBlock = () => this.state.blockPositions[ this.state.activeBlock ]
+  _getBlock = (blockIndex) => this.state.blockPositions[ blockIndex ]
 
   _blockPositionsSet = () => this.state.blockPositionsSetCount === this.props.children.length
 
