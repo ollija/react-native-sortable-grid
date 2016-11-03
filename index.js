@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StyleSheet,
   Animated,
@@ -263,8 +263,8 @@ class DraggableGrid extends Component {
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
     if (!this._blockPositionsSet()) {
-      let blockPositions = this.state.blockPositions;
-      let blockPositionsSetCount = blockPositions[key] ? this.state.blockPositionsSetCount : ++this.state.blockPositionsSetCount;
+      let blockPositions = this.state.blockPositions
+      let blockPositionsSetCount = blockPositions[key] ? this.state.blockPositionsSetCount : ++this.state.blockPositionsSetCount
       let thisPosition = {
         x: nativeEvent.layout.x,
         y: nativeEvent.layout.y
