@@ -5,6 +5,7 @@
 
 <p align="center">
   <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
+  <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif">
 </p>
 
 # react-native-sortable-grid
