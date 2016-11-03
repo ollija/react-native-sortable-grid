@@ -4,8 +4,8 @@
 </h3>
 
 <p align="center">
-  <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif">
-  <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif">
+  <img alt="Issue Stats" src="http://i.giphy.com/gcB8YYVtL2BsA.gif" style="margin:0 20px;">
+  <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif" style="margin:0 20px;">
 </p>
 
 # react-native-sortable-grid
