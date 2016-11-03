@@ -18,7 +18,7 @@ const ACTIVE_BLOCK_CENTERING_DURATION = 200 // Milliseconds
 const DOUBLETAP_TRESHOLD              = 150 // Milliseconds
 const NULL_FN                         = () => {}
 
-class DraggableGrid extends Component {
+class SortableGrid extends Component {
 
   constructor() {
     super()
@@ -449,7 +449,7 @@ class DraggableGrid extends Component {
   // Style getters
 
   _getGridStyle = () => [
-    styles.draggableGrid,
+    styles.sortableGrid,
     this.props.style,
     this._blockPositionsSet() && { height: this.state.gridHeight }
   ]
@@ -502,7 +502,7 @@ class DraggableGrid extends Component {
 
 const styles = StyleSheet.create(
 {
-  draggableGrid: {
+  sortableGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
@@ -520,4 +520,4 @@ const styles = StyleSheet.create(
   }
 })
 
-module.exports = DraggableGrid
+module.exports = SortableGrid
