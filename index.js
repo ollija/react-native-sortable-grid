@@ -182,7 +182,7 @@ class SortableGrid extends Component {
     let lastBlockOrderNumber = this.itemOrder.length - this.state.deletedItems.length - 1
     let currentBlock = _.findIndex(this.itemOrder, item => item.order == lastBlockOrderNumber)
     let previousBlock = _.findIndex(this.itemOrder, item => item.order == lastBlockOrderNumber - 1)
-    if (previousBlock > -1) this.reorderBlocksRecursive( currentBlock, previousBlock )
+    if (currentBlock != this.state.activeBlock) this.reorderBlocksRecursive( currentBlock, previousBlock )
   }
 
   reorderBlocksRecursive = (currentBlock, previousBlock) => {
