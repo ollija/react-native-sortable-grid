@@ -177,20 +177,21 @@ class DraggableGrid extends Component {
   }
 
   reorderBlocksAfterDeletion = () => {
-    let itemOrder = _.cloneDeep(this.itemOrder)
-    let currentBlockOrderNumber = itemOrder[ this.state.activeBlock ].order
-    let orderedBlocks = _.sortBy(itemOrder, item=>item.order).filter(item => item.order != null)
-    this.itemOrder[ this.state.activeBlock ].order = null
-
-    for (let i = orderedBlocks.length-1; i > currentBlockOrderNumber; --i) {
-      let previousBlockIndex = _.findIndex(itemOrder, item => item.order == i - 1)
-      let currentBlockIndex = _.findIndex(itemOrder, item => item.order == i)
-
-      this.animateBlockMove(currentBlockIndex, this._getBlock(previousBlockIndex).origin)
-      this._getBlock(currentBlockIndex).origin = this._getBlock(previousBlockIndex).origin
-      this.itemOrder[currentBlockIndex].order--
-    }
+    let lastBlockOrderNumber = this.itemOrder.length - this.state.deletedItems.length - 1
+    let currentBlock = _.findIndex(this.itemOrder, item => item.order == lastBlockOrderNumber)
+    let previousBlock = _.findIndex(this.itemOrder, item => item.order == lastBlockOrderNumber - 1)
+    if (previousBlock > -1) this.reorderBlocksRecursive( currentBlock, previousBlock )
   }
+
+  reorderBlocksRecursive = (currentBlock, previousBlock) => {
+    this.animateBlockMove(currentBlock, this._getBlock(previousBlock).origin)
+    this._getBlock(currentBlock).origin = this._getBlock(previousBlock).origin
+    let nextPreviousBlock = _.findIndex(this.itemOrder, item => item.order == this.itemOrder[previousBlock].order - 1)
+    if (previousBlock != this.state.activeBlock)
+        this.reorderBlocksRecursive(previousBlock, nextPreviousBlock)
+    this.itemOrder[ currentBlock ].order--
+  }
+
 
   animateBlockMove = (blockIndex, position) => {
     Animated.timing(
@@ -207,6 +208,7 @@ class DraggableGrid extends Component {
     deletedItems.push(this.state.activeBlock)
     this.setState({ deletedItems })
     this._getActiveBlock().origin = null
+    this.itemOrder[ this.state.activeBlock ].order = null
   }
 
   returnBlockToOriginalPosition = () => {
@@ -327,71 +329,67 @@ class DraggableGrid extends Component {
         onLayout= { this.assessGridSize }
       >
         { gridLayout &&
-          this.props.children.map( (item, key) =>
-            <Animated.View
-              key = {key}
-              style = {[
-                { width: blockWidth,
-                  height: blockWidth,
-                  justifyContent: 'center' },
+          this.props.children.map( (item, key) => {
 
-                blockPositionsSet &&
-                { position: 'absolute',
-                  top: this._getBlock(key).currentPosition.getLayout().top,
-                  left: this._getBlock(key).currentPosition.getLayout().left
-                },
+            return (
+              <Animated.View
+                key = {key}
+                style = {[
+                  { width: blockWidth,
+                    height: blockWidth,
+                    justifyContent: 'center' },
 
-                this.state.activeBlock == key && this._blockActivationWiggle(),
-                this.state.activeBlock == key && { zIndex: 1 },
+                  blockPositionsSet &&
+                  { position: 'absolute',
+                    top: this._getBlock(key).currentPosition.getLayout().top,
+                    left: this._getBlock(key).currentPosition.getLayout().left
+                  },
 
-                this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity },
+                  this.state.activeBlock == key && this._blockActivationWiggle(),
+                  this.state.activeBlock == key && { zIndex: 1 },
+                  this.state.deleteBlock == key && { opacity: this.state.deleteBlockOpacity },
+                  this.state.deletedItems.indexOf(key) !== -1 && styles.deletedBlock
 
-                this.state.deletedItems.indexOf(key) !== -1 && { opacity: 0, position: 'absolute', left: 0, top: 0, height: 0, width: 0 }
+                  ]}
+                onLayout = { this.saveBlockPositions(key) }
+                {...this._panResponder.panHandlers}
+              >
+                <TouchableWithoutFeedback
+                  style        = {{ flex: 1 }}
+                  delayPressIn = { this.dragActivationTreshold }
+                  onPressIn    = { this.activateDrag(key) }
+                  onPress      = { this.handleTap(item.props) }>
 
-                ]}
-              onLayout = { this.saveBlockPositions(key) }
-              {...this._panResponder.panHandlers}
-            >
-              <TouchableWithoutFeedback
-                style        = {{ flex: 1 }}
-                delayPressIn = { this.dragActivationTreshold }
-                onPressIn    = { this.activateDrag(key) }
-                onPress      = { this.handleTap(item.props) }>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
 
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  <View style={[{ flex: 1 }, this.state.activeBlock == key &&
-                  this.state.deleteModeOn && this._getBlock( key ).origin &&
-                  { opacity: 1.5
-                    - (this._getBlock( key ).currentPosition.y._value
-                    + this._getBlock( key ).currentPosition.y._offset
-                    - this._getBlock( key ).origin.y) / 50
-                  }]}>
-                    { item }
+                    <View style={ this._getItemWrapperStyle(key) }>
+                      { item }
+                    </View>
+
+                    { this.state.deleteModeOn &&
+                      <Image
+                        style={[{
+                          position: 'absolute',
+                          top: this.state.blockWidth/2 - 15,
+                          left: this.state.blockWidth/2 - 15,
+                          width: 30,
+                          height: 30,
+                          opacity: .2},
+                          this.state.activeBlock == key && this._getBlock( key ).origin &&
+                          { opacity: .2
+                            + ((this._getBlock( key ).currentPosition.y._value
+                            +   this._getBlock( key ).currentPosition.y._offset
+                            -   this._getBlock( key ).origin.y) / 50)
+                          }]}
+                        source={require('./assets/delete.png')}
+                      />
+                    }
+
                   </View>
-
-                  { this.state.deleteModeOn &&
-                    <Image
-                    style={[{
-                      position: 'absolute',
-                      top: this.state.blockWidth/2 - 15,
-                      left: this.state.blockWidth/2 - 15,
-                      width: 30,
-                      height: 30,
-                      opacity: .2},
-                      this.state.activeBlock == key && this._getBlock( key ).origin &&
-                      { opacity: .2
-                        + ((this._getBlock( key ).currentPosition.y._value
-                        + this._getBlock( key ).currentPosition.y._offset
-                        - this._getBlock( key ).origin.y) / 50) }]}
-                    source={require('./assets/delete.png')}
-                  />}
-
-                </View>
-
-              </TouchableWithoutFeedback>
-
-            </Animated.View>
-          )
+                </TouchableWithoutFeedback>
+              </Animated.View>
+            )
+          })
         }
       </Animated.View>
   )}
@@ -399,6 +397,7 @@ class DraggableGrid extends Component {
   // Helpers & other boring stuff
 
   _getActiveBlock = () => this.state.blockPositions[ this.state.activeBlock ]
+
   _getBlock = (blockIndex) => this.state.blockPositions[ blockIndex ]
 
   _blockPositionsSet = () => this.state.blockPositionsSetCount === this.props.children.length
@@ -478,13 +477,37 @@ class DraggableGrid extends Component {
       onPanResponderMove:    this.state.activeBlock != null ? null : this.onMoveBlock,
       onPanResponderRelease: this.state.activeBlock != null ? null : this.onReleaseBlock
     })
+
+  _getItemWrapperStyle = (key) => [
+    { flex: 1 },
+       this.state.activeBlock == key
+    && this.state.deleteModeOn
+    && this._getBlock( key ).origin
+    &&
+    { opacity: 1.5 -
+      (   this._getBlock( key ).currentPosition.y._value
+        + this._getBlock( key ).currentPosition.y._offset
+        - this._getBlock( key ).origin.y
+      ) / 50
+    }
+  ]
+
 }
 
-const styles = StyleSheet.create({
-draggableGrid: {
-  flexDirection: 'row',
-  flexWrap: 'wrap'
-}
+const styles = StyleSheet.create(
+{
+  draggableGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  deletedBlock: {
+    opacity: 0,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    height: 0,
+    width: 0
+  }
 })
 
 module.exports = DraggableGrid
