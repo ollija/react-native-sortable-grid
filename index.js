@@ -437,10 +437,14 @@ class DraggableGrid extends Component {
       onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
       onShouldBlockNativeResponder:        (evt, gestureState) => false,
       onPanResponderTerminationRequest:    (evt, gestureState) => false,
-      onPanResponderGrant:   this.state.activeBlock != null ? null : this.onStartDrag,
-      onPanResponderMove:    this.state.activeBlock != null ? null : this.onMoveBlock,
-      onPanResponderRelease: this.state.activeBlock != null ? null : this.onReleaseBlock
+      onPanResponderGrant:   this.onActiveBlockIsSet(this.onStartDrag),
+      onPanResponderMove:    this.onActiveBlockIsSet(this.onMoveBlock),
+      onPanResponderRelease: this.onActiveBlockIsSet(this.onReleaseBlock)
     })
+
+  onActiveBlockIsSet = (fn) => (evt, gestureState) => {
+    if (this.state.activeBlock != null) fn(evt, gestureState)
+  }
 
   // Style getters
 
