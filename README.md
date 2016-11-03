@@ -72,6 +72,16 @@ import SortableGrid from 'react-native-sortable-grid'
 
   Function that is executed after the drag is released. Will return the new item order.
 
+ -  ``` onDeleteItem ``` **Callback** *(item)*
+
+  Function that is executed item is deleted. Will return the properties of the deleted item.
+
+
+## SortableGrid methods
+
+ -  ``` toggleDeleteMode ``` accepts no arguments
+
+  Calling this will toggle item deletion mode on/off. Will return object ```{ deleteModeOn: true/false }```.
 
 
 ## SortableGrid's children's properties
