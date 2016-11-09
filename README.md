@@ -49,7 +49,7 @@ import SortableGrid from 'react-native-sortable-grid'
 
   *  When a row becomes empty of items due to item deletion, the height of the grid is smoothly adjusted to fit the new rows. However, passing ```flex:1``` inside the style prop will cause the grid to fill up the available space and not adjust height when rows become empty.
   * User cannot drag items outside of the grid. Assigning ```flex:1``` will expand the grid, therefore giving more space for the items to be dragged in.
-  * When deleting items from the last row on Android, the items can get clipped. You can workaround this by giving the grid ```bottomPadding```. (This is <a href="https://facebook.github.io/react-native/releases/0.26/docs/known-issues.html#the-overflow-style-property-defaults-to-hidden-and-cannot-be-changed-on-android">a know issue</a> with ```overflow```-property on Android)
+  * When deleting items from the last row on Android, the items can get clipped. You can workaround this by giving the grid ```bottomPadding```. (This is <a href="https://facebook.github.io/react-native/releases/0.26/docs/known-issues.html#the-overflow-style-property-defaults-to-hidden-and-cannot-be-changed-on-android">a known issue</a> with ```overflow```-property on Android)
 
 
  -  ``` blockTransitionDuration ``` **Number**
