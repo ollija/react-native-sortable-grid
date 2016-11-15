@@ -39,6 +39,7 @@ class SortableGrid extends Component {
     this.gridHeightTarget  = null
     this.ghostBlocks       = []
     this.itemOrder         = []
+    this.panCapture        = false
 
     this.tapTimer          = null
     this.tapIgnore         = false
@@ -229,6 +230,7 @@ class SortableGrid extends Component {
     let itemOrder = _.sortBy( this.itemOrder, item => item.order )
     this.onDragRelease({ itemOrder })
     this.setState({ activeBlock: null })
+    this.panCapture = false
   }
 
   deleteModeMove = ({x, y}) => {
@@ -298,6 +300,7 @@ class SortableGrid extends Component {
   }
 
   activateDrag = (key) => () => {
+    this.panCapture = true
     this.onDragStart(this.itemOrder[key])
     this.setState({activeBlock: key})
     this.state.startDragWiggle.setValue(20)
@@ -433,8 +436,8 @@ class SortableGrid extends Component {
       onPanResponderTerminate:             (evt, gestureState) => {},
       onStartShouldSetPanResponder:        (evt, gestureState) => true,
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onMoveShouldSetPanResponder:         (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture:  (evt, gestureState) => true,
+      onMoveShouldSetPanResponder:         (evt, gestureState) => this.panCapture,
+      onMoveShouldSetPanResponderCapture:  (evt, gestureState) => this.panCapture,
       onShouldBlockNativeResponder:        (evt, gestureState) => false,
       onPanResponderTerminationRequest:    (evt, gestureState) => false,
       onPanResponderGrant:   this.onActiveBlockIsSet(this.onStartDrag),
