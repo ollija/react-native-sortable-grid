@@ -5,7 +5,7 @@
     "sortable",
     "grid"
   ],
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Drag-and-drop sortable grid view for React Native.",
   "main": "index.js",
   "scripts": {},

@@ -336,8 +336,8 @@ class SortableGrid extends Component {
           >
               <TouchableWithoutFeedback
                 style        = {{ flex: 1 }}
-                delayPressIn = { this.dragActivationTreshold }
-                onPressIn    = { this.activateDrag(key) }
+                delayLongPress = { this.dragActivationTreshold }
+                onLongPress    = { this.activateDrag(key) }
                 onPress      = { this.handleTap(item.props) }>
 
                   <View style={styles.itemImageContainer}>
