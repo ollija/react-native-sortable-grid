@@ -31,6 +31,7 @@ class SortableGrid extends Component {
     this.onDragRelease                = NULL_FN
     this.onDragStart                  = NULL_FN
     this.onDeleteItem                 = NULL_FN
+    this.dragStartAnimation           = null
 
     this.rows              = null
     this.dragPosition      = null
@@ -301,15 +302,9 @@ class SortableGrid extends Component {
 
   activateDrag = (key) => () => {
     this.panCapture = true
-    this.onDragStart(this.itemOrder[key])
-    this.setState({activeBlock: key})
-    this.state.startDragWiggle.setValue(20)
-    Animated.spring(this.state.startDragWiggle, {
-      toValue: 0,
-      velocity: 2000,
-      tension: 2000,
-      friction: 5
-    }).start()
+    this.onDragStart( this.itemOrder[key] )
+    this.setState({ activeBlock: key })
+    this._defaultDragActivationWiggle()
   }
 
   handleTap = ({ onTap = NULL_FN, onDoubleTap = NULL_FN }) => () => {
@@ -398,8 +393,21 @@ class SortableGrid extends Component {
     return Math.sqrt( Math.pow(xDistance, 2) + Math.pow(yDistance, 2) )
   }
 
+  _defaultDragActivationWiggle = () => {
+    if (!this.dragStartAnimation) {
+      this.state.startDragWiggle.setValue(20)
+      Animated.spring(this.state.startDragWiggle, {
+        toValue: 0,
+        velocity: 2000,
+        tension: 2000,
+        friction: 5
+      }).start()
+    }
+  }
+
   _blockActivationWiggle = () => {
-    return { transform: [{ rotate: this.state.startDragWiggle.interpolate({
+    return this.dragStartAnimation ||
+    { transform: [{ rotate: this.state.startDragWiggle.interpolate({
       inputRange:  [0, 360],
       outputRange: ['0 deg', '360 deg']})}]}
   }
@@ -409,6 +417,7 @@ class SortableGrid extends Component {
       if (this[property])
         this[property] = properties[property]
     })
+    this.dragStartAnimation = properties.dragStartAnimation
   }
 
   _onSingleTap = (onTap) => {
