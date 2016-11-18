@@ -85,6 +85,9 @@ import SortableGrid from 'react-native-sortable-grid'
 
   Function that is executed item is deleted. Will return the properties of the deleted item.
 
+ -  ``` dragStartAnimation ``` **Object**
+
+  Custom animation to override the default wiggle. Must be an object containing a key ```transform```, which is an array of transformations. Read about [transforms](https://facebook.github.io/react-native/docs/transforms.html) and [animations](https://facebook.github.io/react-native/docs/animated.html) and [see the example](example/customAnimationExample.js#L47) to learn how to use this.
 
 ## SortableGrid methods
 
@@ -158,12 +161,26 @@ Object {
   <b>Basic item deletion</b><br>toggleDeleteMode() is called during onTap in this example<br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/S4OC2Rt4JXEK4.gif">
   <br><br>
+  
+  <b>Custom block animation can be passed to the grid<br><br>
+  <img alt="Custom animation" src="http://i.giphy.com/FPyiKkqWf1fLW.gif">
+  <br><br>
 
   <b>Smooth resizing of the grid when the last row becomes empty:</b><br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/PEU01yJh997qM.gif">
   <br><br>
 
-  <b>No grid resizing if the grid has ```flex:1``` assigned:</b><br><br>
+  <b>No grid resizing if the grid has <span style="color: white;
+  font-family: Consolas,
+                Monaco,
+                Lucida Console,
+                Liberation Mono,
+                DejaVu Sans Mono,
+                Bitstream Vera Sans Mono,
+                Courier New;
+  font-size: 13px;
+  background-color: rgba(255,255,255, 0.07);
+  padding: 3px;">flex:1</span> assigned:</b><br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/fxBIhIkzydDW0.gif">
   <br><br>
 
@@ -171,7 +188,17 @@ Object {
   <img alt="Issue Stats" src="http://i.giphy.com/4YsV4fvEmb9Dy.gif">
   <br><br>
 
-  <b>With ```flex:1``` there is more space to drag:</b><br><br>
+  <b>With <span style="color: white;
+  font-family: Consolas,
+                Monaco,
+                Lucida Console,
+                Liberation Mono,
+                DejaVu Sans Mono,
+                Bitstream Vera Sans Mono,
+                Courier New;
+  font-size: 13px;
+  background-color: rgba(255,255,255, 0.07);
+  padding: 3px;">flex:1</span> there is more space to drag:</b><br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/lX4NyomLbnRvi.gif">
 
 </p>
