@@ -170,17 +170,7 @@ Object {
   <img alt="Issue Stats" src="http://i.giphy.com/PEU01yJh997qM.gif">
   <br><br>
 
-  <b>No grid resizing if the grid has <span style="color: white;
-  font-family: Consolas,
-                Monaco,
-                Lucida Console,
-                Liberation Mono,
-                DejaVu Sans Mono,
-                Bitstream Vera Sans Mono,
-                Courier New;
-  font-size: 13px;
-  background-color: rgba(255,255,255, 0.07);
-  padding: 3px;">flex:1</span> assigned:</b><br><br>
+  <b>No grid resizing if the grid has flex:1 assigned:</b><br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/fxBIhIkzydDW0.gif">
   <br><br>
 
@@ -188,17 +178,7 @@ Object {
   <img alt="Issue Stats" src="http://i.giphy.com/4YsV4fvEmb9Dy.gif">
   <br><br>
 
-  <b>With <span style="color: white;
-  font-family: Consolas,
-                Monaco,
-                Lucida Console,
-                Liberation Mono,
-                DejaVu Sans Mono,
-                Bitstream Vera Sans Mono,
-                Courier New;
-  font-size: 13px;
-  background-color: rgba(255,255,255, 0.07);
-  padding: 3px;">flex:1</span> there is more space to drag:</b><br><br>
+  <b>With flex:1 there is more space to drag:</b><br><br>
   <img alt="Issue Stats" src="http://i.giphy.com/lX4NyomLbnRvi.gif">
 
 </p>
