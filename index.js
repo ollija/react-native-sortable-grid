@@ -267,8 +267,8 @@ class SortableGrid extends Component {
   }
 
   saveBlockPositions = (key) => ({nativeEvent}) => {
-    if (!this._blockPositionsSet()) {
-      let blockPositions = this.state.blockPositions
+    let blockPositions = this.state.blockPositions
+    if (!blockPositions[key]) {
       let blockPositionsSetCount = blockPositions[key] ? this.state.blockPositionsSetCount : ++this.state.blockPositionsSetCount
       let thisPosition = {
         x: nativeEvent.layout.x,
@@ -288,6 +288,7 @@ class SortableGrid extends Component {
   }
 
   setGhostPositions = () => {
+    this.ghostBlocks = []
     let blockWidth = this.state.blockWidth
     let fullGridItemCount = this.rows * this.itemsPerRow
     let ghostBlockCount = fullGridItemCount - this.props.children.length
