@@ -298,7 +298,7 @@ class SortableGrid extends Component {
         x: nativeEvent.layout.x,
         y: nativeEvent.layout.y
       }
-      
+
       blockPositions[key] = {
         currentPosition : new Animated.ValueXY( thisPosition ),
         origin          : thisPosition
@@ -359,10 +359,15 @@ class SortableGrid extends Component {
 
   _saveItemOrder = (items) => {
     items.forEach( (item, index) => {
-      if (!_.findKey(this.itemOrder, (oldItem) => oldItem.key === item.key)) {
-        this.itemOrder.push({ key: item.key, ref: item.ref, order: this.items.length })
+      const foundKey = _.findKey(this.itemOrder, oldItem => oldItem.key === item.key);
+
+      if (foundKey) {
+        this.items[foundKey] = item;
+      }
+      else {
+        this.itemOrder.push({ key: item.key, ref: item.ref, order: this.items.length });
         if (!this.initialLayoutDone) {
-          this.items.push(item)
+          this.items.push(item);
         }
         else {
           let blockPositions = this.state.blockPositions
