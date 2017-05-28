@@ -328,6 +328,7 @@ class SortableGrid extends Component {
 
   getNextBlockCoordinates = () => {
     let blockWidth = this.state.blockWidth
+    let blockHeight = this.state.blockHeight
     let placeOnRow = this.items.length % this.itemsPerRow
     let y = blockHeight * Math.floor(this.items.length / this.itemsPerRow)
     let x = placeOnRow * blockWidth
