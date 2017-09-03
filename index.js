@@ -62,7 +62,7 @@ class SortableGrid extends Component {
               onLongPress = { this.activateDrag(key) }
               onPress = { this.handleTap(item.props) }
               itemWrapperStyle = { this._getItemWrapperStyle(key) }
-              deletionView = { this._getDeletionView(key) }
+              deletionView = { this._getDeletionView(item.key ? item.key : 'Please add a key to each item') }
             >
               {item}
             </Block>

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6d6b6562-d136-43dc-9f8e-c54489b23108" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.js" afterPath="$PROJECT_DIR$/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -50,8 +49,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="525" column="28" lean-forward="false" selection-start-line="525" selection-start-column="26" selection-end-line="525" selection-end-column="44" />
+            <state relative-caret-position="435">
+              <caret line="69" column="22" lean-forward="true" selection-start-line="69" selection-start-column="22" selection-end-line="69" selection-end-column="22" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -98,11 +97,11 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>deleteModeOn</find>
-      <find>_getImageDeleteIconStyle</find>
-      <find>_getDeletionView</find>
       <find>this.props</find>
       <find>customDeleteBtn</find>
       <find>./assets/trash.png</find>
+      <find>_getImageDeleteIconStyle</find>
+      <find>_getDeletionView</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -192,12 +191,12 @@
       <option name="presentableId" value="Default" />
       <updated>1504460468222</updated>
       <workItem from="1504460469340" duration="622000" />
-      <workItem from="1504462433483" duration="411000" />
+      <workItem from="1504462433483" duration="1484000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1043000" />
+    <option name="totallyTimeSpent" value="2116000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-119" y="-1177" width="1920" height="1177" extended-state="0" />
@@ -472,8 +471,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="525" column="28" lean-forward="false" selection-start-line="525" selection-start-column="26" selection-end-line="525" selection-end-column="44" />
+        <state relative-caret-position="435">
+          <caret line="69" column="22" lean-forward="true" selection-start-line="69" selection-start-column="22" selection-end-line="69" selection-end-column="22" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>
