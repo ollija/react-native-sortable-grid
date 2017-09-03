@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6d6b6562-d136-43dc-9f8e-c54489b23108" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.js" afterPath="$PROJECT_DIR$/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -50,8 +49,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="524" column="42" lean-forward="true" selection-start-line="524" selection-start-column="42" selection-end-line="524" selection-end-column="42" />
+            <state relative-caret-position="318">
+              <caret line="527" column="8" lean-forward="false" selection-start-line="527" selection-start-column="8" selection-end-line="527" selection-end-column="8" />
               <folding>
                 <element signature="e#0#40#0" expanded="true" />
               </folding>
@@ -102,6 +101,7 @@
       <find>_getDeletionView</find>
       <find>this.props</find>
       <find>customDeleteBtn</find>
+      <find>./assets/trash.png</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -190,12 +190,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1504460468222</updated>
-      <workItem from="1504460469340" duration="248000" />
+      <workItem from="1504460469340" duration="622000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="248000" />
+    <option name="totallyTimeSpent" value="622000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-119" y="-1177" width="1920" height="1177" extended-state="6" />
@@ -284,8 +284,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="524" column="42" lean-forward="true" selection-start-line="524" selection-start-column="42" selection-end-line="524" selection-end-column="42" />
+        <state relative-caret-position="318">
+          <caret line="527" column="8" lean-forward="false" selection-start-line="527" selection-start-column="8" selection-end-line="527" selection-end-column="8" />
           <folding>
             <element signature="e#0#40#0" expanded="true" />
           </folding>
