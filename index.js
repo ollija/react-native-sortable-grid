@@ -522,8 +522,8 @@ class SortableGrid extends Component {
 
   _getDeletionView = (key) => {
     if (this.state.deleteModeOn)
-      if (this.props.customDeleteButton) {
-        return this.props.customDeleteButton
+      if (this.props.customDeleteButton(key)) {
+        return this.props.customDeleteButton(key)
       } else {
         return <Image style={ this._getImageDeleteIconStyle(key) } source={require('./assets/trash.png')} />
       }
