@@ -29,8 +29,8 @@ class Block extends Component {
       <TouchableWithoutFeedback
         style          = {{ flex: 1 }}
         delayLongPress = { this.props.delayLongPress }
-        onLongPress    = { this.props.onLongPress }
-        onPress        = { this.props.onPress }>
+        onLongPress    = { () => this.props.inactive || this.props.onLongPress() }
+        onPress        = { () => this.props.inactive || this.props.onPress() }>
 
           <View style={styles.itemImageContainer}>
             <View style={ this.props.itemWrapperStyle }>
@@ -63,6 +63,7 @@ class SortableGrid extends Component {
               onPress = { this.handleTap(item.props) }
               itemWrapperStyle = { this._getItemWrapperStyle(key) }
               deletionView = { this._getDeletionView(key) }
+              inactive = { item.props.inactive }
             >
               {item}
             </Block>

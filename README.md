@@ -114,6 +114,9 @@ import SortableGrid from 'react-native-sortable-grid'
 
   Function that is executed when the block is double tapped within a timeframe of ```doubleTapTreshold``` (default 150ms). Assigning this will delay the execution of ```onTap```. Omitting this will cause all taps to be handled as single taps, regardless of their frequency.
 
+ - ``` inactive ``` **Boolean**
+
+Flag to mark a child node as being inactive. If set, no touch events will be fired when users interact with the node.
 
 ## onDragRelease return value looks like this:
 
