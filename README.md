@@ -96,6 +96,10 @@ import SortableGrid from 'react-native-sortable-grid'
  -  ``` dragStartAnimation ``` **Object**
 
   Custom animation to override the default wiggle. Must be an object containing a key ```transform```, which is an array of transformations. Read about [transforms](https://facebook.github.io/react-native/docs/transforms.html) and [animations](https://facebook.github.io/react-native/docs/animated.html) and [see the example](example/customAnimationExample.js#L47) to learn how to use this.
+  
+ -  ``` disabledBlocks ``` **Array**
+   
+  List of block indices that cannot be sorted. They cannot be dragged or displaced by dragging another block.
 
 ## SortableGrid methods
 

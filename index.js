@@ -84,6 +84,7 @@ class SortableGrid extends Component {
     this.dragStartAnimation           = null
 
     this.rows              = null
+    this.disabledBlocks    = []
     this.dragPosition      = null
     this.activeBlockOffset = null
     this.blockWidth        = null
@@ -188,7 +189,7 @@ class SortableGrid extends Component {
           closestDistance = distance
         }
       })
-      if (closest !== this.state.activeBlock) {
+      if (this.disabledBlocks.indexOf(closest) === -1 && closest !== this.state.activeBlock) {
         Animated.timing(
           this._getBlock(closest).currentPosition,
           {
@@ -353,6 +354,9 @@ class SortableGrid extends Component {
   }
 
   activateDrag = (key) => () => {
+    if (this.disabledBlocks.indexOf(key) !== -1) {
+      return
+    }
     this.panCapture = true
     this.onDragStart( this.itemOrder[key] )
     this.setState({ activeBlock: key })
