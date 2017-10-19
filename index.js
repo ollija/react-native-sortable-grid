@@ -141,6 +141,7 @@ class SortableGrid extends Component {
 
   onStartDrag = (evt, gestureState) => {
     if (this.state.activeBlock != null) {
+      this.props.onStartDrag && this.props.onStartDrag(evt, gestureState);
       let activeBlockPosition = this._getActiveBlock().origin
       let x = activeBlockPosition.x - gestureState.x0
       let y = activeBlockPosition.y - gestureState.y0
@@ -152,6 +153,7 @@ class SortableGrid extends Component {
 
   onMoveBlock = (evt, {moveX, moveY, dx, dy}) => {
     if (this.state.activeBlock != null && this._blockPositionsSet()) {
+      this.props.onMoveBlock && this.props.onMoveBlock(evt, {moveX, moveY, dx, dy});
       if (this.state.deleteModeOn) return this.deleteModeMove({ x: moveX, y: moveY })
 
       if (dx != 0 || dy != 0) this.initialDragDone = true
@@ -210,7 +212,9 @@ class SortableGrid extends Component {
 
   onReleaseBlock = (evt, gestureState) => {
     this.returnBlockToOriginalPosition()
-    if (this.state.deleteModeOn && this.state.deletionSwipePercent == 100)
+    const shouldDeleteBlock = this.state.deleteModeOn && this.state.deletionSwipePercent == 100;
+    this.props.onReleaseBlock && this.props.onReleaseBlock(evt, gestureState, shouldDeleteBlock)
+    if (shouldDeleteBlock)
       this.deleteBlock()
     else
       this.afterDragRelease()
