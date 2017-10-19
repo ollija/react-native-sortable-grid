@@ -64,6 +64,14 @@ import SortableGrid from 'react-native-sortable-grid'
 
   How many items should be placed on one row
 
+ -  ``` itemWidth ``` **Number**
+
+  If set, itemsPerRow will be calculated to fit items of this size
+
+ -  ``` itemHeight ``` **Number**
+
+  When used together with itemsPerRow, sets the size of a block to something other than the default square
+
  -  ``` dragActivationTreshold ``` **Number**
 
   How long must the user hold the press on the block until it becomes active and can be dragged (milliseconds)
