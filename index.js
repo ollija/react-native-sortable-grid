@@ -62,7 +62,7 @@ class SortableGrid extends Component {
               onLongPress = { this.activateDrag(key) }
               onPress = { this.handleTap(item.props) }
               itemWrapperStyle = { this._getItemWrapperStyle(key) }
-              deletionView = { this._getDeletionView(key) }
+              deletionView = { this._getDeletionView(item.key ? item.key : 'Please add a key to each item') }
             >
               {item}
             </Block>
@@ -538,7 +538,11 @@ class SortableGrid extends Component {
 
   _getDeletionView = (key) => {
     if (this.state.deleteModeOn)
-      return <Image style={ this._getImageDeleteIconStyle(key) } source={require('./assets/trash.png')} />
+      if (this.props.customDeleteButton(key)) {
+        return this.props.customDeleteButton(key)
+      } else {
+        return <Image style={ this._getImageDeleteIconStyle(key) } source={require('./assets/trash.png')} />
+      }
   }
 
   _getItemWrapperStyle = (key) => [
