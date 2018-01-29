@@ -7,8 +7,10 @@
   ],
   "version": "2.0.1",
   "description": "Drag-and-drop sortable grid view for React Native.",
-  "main": "index.js",
-  "scripts": {},
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "babel index.js --out-dir dist"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ollija/react-native-sortable-grid.git"
@@ -16,6 +18,10 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "lodash": "^4.16.4"
   }
 }
