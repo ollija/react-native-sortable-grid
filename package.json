@@ -9,7 +9,7 @@
   "description": "Drag-and-drop sortable grid view for React Native.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel index.js --out-dir dist"
+    "build": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-module-resolver": "^3.0.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",

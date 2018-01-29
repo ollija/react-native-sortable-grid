@@ -559,7 +559,7 @@ var SortableGrid = function (_Component2) {
     };
 
     _this2._getDeletionView = function (key) {
-      if (_this2.state.deleteModeOn) return _react2.default.createElement(_reactNative.Image, { style: _this2._getImageDeleteIconStyle(key), source: require('./assets/trash.png') });
+      if (_this2.state.deleteModeOn) return _react2.default.createElement(_reactNative.Image, { style: _this2._getImageDeleteIconStyle(key), source: require('../assets/trash.png') });
     };
 
     _this2._getItemWrapperStyle = function (key) {
