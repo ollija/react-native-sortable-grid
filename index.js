@@ -430,8 +430,10 @@ class SortableGrid extends Component {
           let blockIndex = _.findIndex(this.itemOrder, item => item.order === order)
           let x = (order * this.state.blockWidth) % (this.itemsPerRow * this.state.blockWidth)
           let y = Math.floor(order / this.itemsPerRow) * this.state.blockHeight
-          this.state.blockPositions[blockIndex].origin = {x, y}
-          this.animateBlockMove(blockIndex, {x, y})
+          if (this.state.blockPositions[blockIndex]) {
+            this.state.blockPositions[blockIndex].origin = {x, y}
+            this.animateBlockMove(blockIndex, {x, y})
+          }
         })
         this.setGhostPositions()
       })
@@ -546,6 +548,7 @@ class SortableGrid extends Component {
     { flex: 1 },
        this.state.activeBlock == key
     && this.state.deleteModeOn
+    && this._getBlock( key )
     && this._getBlock( key ).origin
     &&
     { opacity: 1.5 - this._getDynamicOpacity(key) }
@@ -560,6 +563,7 @@ class SortableGrid extends Component {
       opacity: .5
     },
     this.state.activeBlock == key
+    && this._getBlock( key )
     && this._getBlock( key ).origin
     &&
     { opacity: .5 + this._getDynamicOpacity(key) }
