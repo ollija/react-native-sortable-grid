@@ -29,7 +29,7 @@ class Block extends Component {
       <TouchableWithoutFeedback
         style          = {{ flex: 1 }}
         delayLongPress = { this.props.delayLongPress }
-        onLongPress    = { () => this.props.inactive || this.props.onLongPress() }
+        onLongPress    = { () => (this.props.inactive || this.props.fixed) || this.props.onLongPress() }
         onPress        = { () => this.props.inactive || this.props.onPress() }>
 
           <View style={styles.itemImageContainer}>
@@ -64,6 +64,7 @@ class SortableGrid extends Component {
               itemWrapperStyle = { this._getItemWrapperStyle(key) }
               deletionView = { this._getDeletionView(key) }
               inactive = { item.props.inactive }
+              fixed = { item.props.fixed }
             >
               {item}
             </Block>
@@ -154,7 +155,7 @@ class SortableGrid extends Component {
     if (this.state.activeBlock != null && this._blockPositionsSet()) {
       if (this.state.deleteModeOn) return this.deleteModeMove({ x: moveX, y: moveY })
 
-      if (dx != 0 || dy != 0) this.initialDragDone = true
+      if (dx != 0 || dy != 0) this.initialDragDone = true
 
       let yChokeAmount = Math.max(0, (this.activeBlockOffset.y + moveY) - (this.state.gridLayout.height - this.blockHeight))
       let xChokeAmount = Math.max(0, (this.activeBlockOffset.x + moveX) - (this.state.gridLayout.width - this.blockWidth))
@@ -174,7 +175,9 @@ class SortableGrid extends Component {
           let blockPosition = block.origin
           let distance = this._getDistanceTo(blockPosition)
 
-          if (distance < closestDistance && distance < this.state.blockWidth) {
+          if (distance < closestDistance &&
+            distance < this.state.blockWidth &&
+            !this.items[index].props.fixed) {
             closest = index
             closestDistance = distance
           }
@@ -188,7 +191,9 @@ class SortableGrid extends Component {
           closestDistance = distance
         }
       })
+
       if (closest !== this.state.activeBlock) {
+        // animate the activeBlock closest block to its previous position
         Animated.timing(
           this._getBlock(closest).currentPosition,
           {
@@ -196,11 +201,14 @@ class SortableGrid extends Component {
             duration: this.blockTransitionDuration
           }
         ).start()
+
+        // update the position of the closest block
         let blockPositions = this.state.blockPositions
         this._getActiveBlock().origin = blockPositions[closest].origin
         blockPositions[closest].origin = originalPosition
         this.setState({ blockPositions })
 
+        // update the order array
         var tempOrderIndex = this.itemOrder[this.state.activeBlock].order
         this.itemOrder[this.state.activeBlock].order = this.itemOrder[closest].order
         this.itemOrder[closest].order = tempOrderIndex
@@ -288,7 +296,7 @@ class SortableGrid extends Component {
     }
     else {
       this.blockWidth = nativeEvent.layout.width / this.itemsPerRow
-      this.blockHeight = this.blockWidth
+      this.blockHeight = this.blockHeight = this.props.itemHeight || this.blockWidth;
     }
     if (this.state.gridLayout != nativeEvent.layout) {
       this.setState({
@@ -575,7 +583,7 @@ class SortableGrid extends Component {
     { width: this.state.blockWidth,
       height: this.state.blockHeight,
       justifyContent: 'center' },
-    this._blockPositionsSet() && (this.initialDragDone || this.state.deleteModeOn) &&
+    this._blockPositionsSet() && (this.initialDragDone || this.state.deleteModeOn) &&
     { position: 'absolute',
       top: this._getBlock(key).currentPosition.getLayout().top,
       left: this._getBlock(key).currentPosition.getLayout().left
