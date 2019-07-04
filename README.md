@@ -76,7 +76,7 @@ import SortableGrid from 'react-native-sortable-grid'
 
   How long must the user hold the press on the block until it becomes active and can be dragged (milliseconds)
 
- -  ``` doubleTapTreshold ``` **Number**
+ -  ``` doubleTapThreshold ``` **Number**
 
   How long will the execution wait for the second tap before deciding it was a single tap (milliseconds).
   Will be omitted if no onDoubleTap-property is given to the item being tapped - In which case single-tap callback will be executed instantly

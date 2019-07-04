@@ -77,7 +77,7 @@ class SortableGrid extends Component {
     this.activeBlockCenteringDuration = ACTIVE_BLOCK_CENTERING_DURATION
     this.itemsPerRow                  = ITEMS_PER_ROW
     this.dragActivationTreshold       = DRAG_ACTIVATION_TRESHOLD
-    this.doubleTapTreshold            = DOUBLETAP_TRESHOLD
+    this.doubleTapThreshold            = DOUBLETAP_TRESHOLD
     this.onDragRelease                = NULL_FN
     this.onDragStart                  = NULL_FN
     this.onDeleteItem                 = NULL_FN
@@ -496,7 +496,7 @@ class SortableGrid extends Component {
     this.tapTimer = setTimeout( () => {
       this.doubleTapWait = false
       onTap()
-    }, this.doubleTapTreshold)
+    }, this.doubleTapThreshold)
   }
 
   _onDoubleTap = (onDoubleTap) => {
@@ -508,7 +508,7 @@ class SortableGrid extends Component {
 
   _resetTapIgnoreTime = () => {
     clearTimeout(this.tapTimer)
-    this.tapTimer = setTimeout(() => this.tapIgnore = false, this.doubleTapTreshold)
+    this.tapTimer = setTimeout(() => this.tapIgnore = false, this.doubleTapThreshold)
   }
 
   createTouchHandlers = () =>
